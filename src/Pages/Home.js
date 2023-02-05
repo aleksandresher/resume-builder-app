@@ -2,16 +2,21 @@ import styled from "styled-components";
 import redberry from "../assets/logo.png";
 import line from "../assets/Line.png";
 import logo2 from "../assets/logo2.png";
+import { Link } from "react-router-dom";
+import backgroundImage from "../assets/background.png";
 
-function Home() {
+function Home(props) {
   return (
     <HomeContainer>
       <Redberry src={redberry} />
+      <BackGround src={backgroundImage} />
       <Line src={line} />
       <BackLogo src={logo2} />
-      <ButtonBox>
-        <ButtonText>რეზიუმეს დამატება</ButtonText>
-      </ButtonBox>
+      <Link to={"/Personal"}>
+        <ButtonBox>
+          <ButtonText>რეზიუმეს დამატება</ButtonText>
+        </ButtonBox>
+      </Link>
     </HomeContainer>
   );
 }
@@ -24,6 +29,19 @@ const HomeContainer = styled.div`
 
   align-items: center;
   justify-content: center;
+
+   {
+    a:link {
+      text-decoration: none;
+    }
+  }
+`;
+
+const BackGround = styled.img`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -10;
 `;
 
 const ButtonBox = styled.button`
