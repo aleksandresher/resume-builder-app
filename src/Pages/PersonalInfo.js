@@ -6,17 +6,19 @@ import { useEffect, useState } from "react";
 import line from "../assets/Line.png";
 import sucLogo from "../assets/success.png";
 import { validate } from "graphql";
+import { Link } from "react-router-dom";
 
-function PersonalInfo() {
-  const [file, setFile] = useState("");
+function PersonalInfo({ uploadHandler, file }) {
+  // const [file, setFile] = useState("");
 
-  function uploadHandler(e) {
-    setFile(URL.createObjectURL(e.target.files[0]));
-  }
+  // function uploadHandler(e) {
+  //   setFile(URL.createObjectURL(e.target.files[0]));
+  // }
 
-  useEffect(() => {
-    localStorage.setItem("image", file);
-  }, [file]);
+  // useEffect(() => {
+  //   localStorage.setItem("image", JSON.stringify(file));
+  // }, [file]);
+
   const {
     register,
     watch,
@@ -27,6 +29,13 @@ function PersonalInfo() {
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
+  });
+
+  useFormPersist("storageKey", {
+    watch,
+    setValue,
+    storage: window.localStorage, // default window.sessionStorage
+    exclude: ["baz"],
   });
 
   return (
@@ -89,6 +98,8 @@ function PersonalInfo() {
           <EmailBox>
             <InputLabel>ელ.ფოსტა</InputLabel>
             <EmailInput
+              first={errors.email?.message}
+              second={getFieldState("email").isDirty}
               type="email"
               placeholder="anzorr666@redberry.ge"
               {...register("email", {
@@ -100,11 +111,6 @@ function PersonalInfo() {
             ></EmailInput>
 
             {errors.email ? <EmailError src={warLogo} /> : ""}
-            {/* {getFieldState("email").invalid ? (
-              <EmailSuccess src={sucLogo} />
-            ) : (
-              ""
-            )} */}
             {getFieldState("email").invalid ||
             !getFieldState("email").isDirty ? (
               ""
@@ -128,13 +134,27 @@ function PersonalInfo() {
                 },
               })}
             />
+            {errors.mobile ? <NumberError src={warLogo} /> : ""}
+            {getFieldState("mobile").invalid ||
+            !getFieldState("mobile").isDirty ? (
+              ""
+            ) : (
+              <NumberSuccess src={sucLogo} />
+            )}
             <InputParagraph>
               უნდა აკმაყოფილებდეს ქართული ნომრის ფორმატს
             </InputParagraph>
           </MobileBox>
+          <Link to={"/Experience"}>
+            <button type="button">შემდეგი</button>
+          </Link>
         </form>
       </InfoContainer>
-      <LiveInfo></LiveInfo>
+      <LiveInfo>
+        <p>{watch("firstName")}</p>
+        <p>{watch("lastName")}</p>
+        <img src={file} />
+      </LiveInfo>
     </PersonalInfoContainer>
   );
 }
@@ -171,9 +191,28 @@ const EmailError = styled.img`
   left: 815px;
 `;
 
+const NumberError = styled.img`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 720px;
+  left: 945px;
+`;
+
 const EmailSuccess = styled.img`
   width: 16px;
   height: 16px;
+  position: absolute;
+  top: 40px;
+  left: 775px;
+`;
+
+const NumberSuccess = styled.img`
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 725px;
+  left: 900px;
 `;
 
 const InfoContainer = styled.div`
@@ -193,7 +232,9 @@ const InputBox = styled.div`
 const EmailInput = styled.input`
   width: 798px;
   height: 48px;
-  border: 1px solid #bcbcbc;
+  border: 2px solid
+    ${(props) => (props.first && props.second ? "#EF5050" : "#ebebeb")};
+
   border-radius: 4px;
 
    {
@@ -203,6 +244,12 @@ const EmailInput = styled.input`
       padding-left: 16px;
       font-color: rgba(0, 0, 0, 0.6);
     }
+  }
+
+   {
+    &:focus {
+      border: 2px solid #ebebeb;
+        
   }
 `;
 
@@ -277,6 +324,7 @@ const TextArea = styled.div`
 `;
 
 const NumberInput = styled.input`
+  position: relative;
   height: 48px;
   border: 1px solid #bcbcbc;
   border-radius: 4px;
