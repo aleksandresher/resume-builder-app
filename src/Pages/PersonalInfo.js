@@ -4,6 +4,8 @@ import useFormPersist from "react-hook-form-persist";
 import warLogo from "../assets/warning.png";
 import { useEffect, useState } from "react";
 import line from "../assets/Line.png";
+import sucLogo from "../assets/success.png";
+import { validate } from "graphql";
 
 function PersonalInfo() {
   const [file, setFile] = useState("");
@@ -19,12 +21,13 @@ function PersonalInfo() {
     register,
     watch,
     setValue,
+    getValues,
+    getFieldState,
+
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
   });
-
-  console.log(file);
 
   return (
     <PersonalInfoContainer>
@@ -46,6 +49,7 @@ function PersonalInfo() {
                   minLength: { value: 2 },
                 })}
               ></InputField>
+
               <InputParagraph>მინუმუმ 2 ასო, ქართული ასოები</InputParagraph>
             </InputBox>
 
@@ -94,6 +98,20 @@ function PersonalInfo() {
                   "email must end with @redberry.ge",
               })}
             ></EmailInput>
+
+            {errors.email ? <EmailError src={warLogo} /> : ""}
+            {/* {getFieldState("email").invalid ? (
+              <EmailSuccess src={sucLogo} />
+            ) : (
+              ""
+            )} */}
+            {getFieldState("email").invalid ||
+            !getFieldState("email").isDirty ? (
+              ""
+            ) : (
+              <EmailSuccess src={sucLogo} />
+            )}
+
             <InputParagraph>უნდა მთავრდებოდეს @redberry.ge-ით</InputParagraph>
           </EmailBox>
 
@@ -143,6 +161,19 @@ const NameLastNameBox = styled.div`
   margin-top: 69px;
   display: flex;
   gap: 56px;
+`;
+
+const EmailError = styled.img`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 37px;
+  left: 815px;
+`;
+
+const EmailSuccess = styled.img`
+  width: 16px;
+  height: 16px;
 `;
 
 const InfoContainer = styled.div`
@@ -224,6 +255,7 @@ const EmailBox = styled.div`
   height: 122px;
   width: 798px;
   margin-top: 17px;
+  position: relative;
 `;
 const MobileBox = styled.div`
   display: flex;
