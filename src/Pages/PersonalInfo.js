@@ -277,6 +277,7 @@ const TextAreaField = styled.textarea`
   height: 106px;
   border: 1px solid #bcbcbc;
   border-radius: 4px;
+  resize: none;
 
    {
     ::placeholder {
