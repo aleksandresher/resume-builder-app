@@ -1,6 +1,7 @@
 import useFormPersist from "react-hook-form-persist";
 import styled from "styled-components";
 import { useFieldArray, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 function Experience(props) {
   const {
@@ -37,12 +38,13 @@ function Experience(props) {
     /* <img src={props.image} /> */
   }
   return (
-    <div>
-      <div>
+    <ExperienceContainer>
+      <ExperienceInputs>
         <ExperienceHeader>
           <ExpHeading>გამოცდილება</ExpHeading>
           <ExpP>2/4</ExpP>
         </ExperienceHeader>
+
         {fields.map((field, index) => {
           return (
             <ExperienceForm key={field.id}>
@@ -56,7 +58,6 @@ function Experience(props) {
                     minLength: { value: 2 },
                   })}
                 ></PositionAndEmployerInput>
-
                 <InputParagraph>მინუმუმ 2 სიმბოლო</InputParagraph>
               </PositionAndEmployerBox>
               <PositionAndEmployerBox>
@@ -106,14 +107,42 @@ function Experience(props) {
             </ExperienceForm>
           );
         })}
-      </div>
-      <AppendButton type="button" onClick={() => append()}>
-        მეტი გამოცდილების დამატება
-      </AppendButton>
-    </div>
+
+        <AppendButton type="button" onClick={() => append()}>
+          მეტი გამოცდილების დამატება
+        </AppendButton>
+
+        <Link to={"/Personal"}>
+          <button>წინა</button>
+        </Link>
+
+        <Link to={"/Education"}>
+          <button type="button">შემდეგი</button>
+        </Link>
+      </ExperienceInputs>
+
+      <LineInfo>
+        <p>sdfsdfsdf</p>
+        <img src={props.image} />
+      </LineInfo>
+    </ExperienceContainer>
   );
 }
 export default Experience;
+
+const ExperienceContainer = styled.div`
+  display: flex;
+  width: 100%;
+`;
+
+const ExperienceInputs = styled.div`
+  padding-left: 126px;
+  padding-right: 126px;
+  width: 1098px;
+  background-color: #f9f9f9;
+`;
+
+const LineInfo = styled.div``;
 
 const ExperienceHeader = styled.div`
   display: flex;
@@ -121,6 +150,8 @@ const ExperienceHeader = styled.div`
   height: 48px;
   border-bottom: 1px solid #c1c1c1;
   align-items: center;
+  padding-bottom: 12px;
+  margin-top: 47px;
   justify-content: space-between;
 `;
 const ExpHeading = styled.h1`
@@ -140,6 +171,7 @@ const ExperienceForm = styled.form`
   border-bottom: 1px solid #c1c1c1;
   padding-bottom: 50px;
   margin-bottom: 50px;
+  margin-top: 69px;
 `;
 
 const PositionAndEmployerBox = styled.div`
@@ -147,7 +179,7 @@ const PositionAndEmployerBox = styled.div`
   flex-direction: column;
   gap: 8px;
   height: 122px;
-  width: 798px;
+  width: 846px;
   margin-top: 17px;
 `;
 
@@ -194,6 +226,7 @@ const InputParagraph = styled.p`
 `;
 
 const DateContainer = styled.div`
+  width: 846px;
   display: flex;
   gap: 56px;
   margin-top: 10px;
@@ -233,6 +266,7 @@ const JobDescription = styled.div`
   flex-direction: column;
   gap: 8px;
   margin-top: 25px;
+  width: 846px;
 `;
 const TextAreaField = styled.textarea`
   resize: none;

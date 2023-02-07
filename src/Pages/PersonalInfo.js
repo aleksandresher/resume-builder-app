@@ -8,7 +8,7 @@ import sucLogo from "../assets/success.png";
 import { validate } from "graphql";
 import { Link } from "react-router-dom";
 
-function PersonalInfo({ uploadHandler, file }) {
+function PersonalInfo({ uploadHandler }) {
   // const [file, setFile] = useState("");
 
   // function uploadHandler(e) {
@@ -38,13 +38,48 @@ function PersonalInfo({ uploadHandler, file }) {
     exclude: ["baz"],
   });
 
+  const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
+  const [file, setFile] = useState(null);
+  const [fileDataURL, setFileDataURL] = useState(null);
+
+  const changeHandler = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.match(imageMimeType)) {
+      alert("Image mime type is not valid");
+      return;
+    }
+    setFile(file);
+  };
+  useEffect(() => {
+    let fileReader,
+      isCancel = false;
+    if (file) {
+      fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        const { result } = e.target;
+        if (result && !isCancel) {
+          setFileDataURL(result);
+          localStorage.setItem("image", result);
+        }
+      };
+      fileReader.readAsDataURL(file);
+    }
+    return () => {
+      isCancel = true;
+      if (fileReader && fileReader.readyState === 1) {
+        fileReader.abort();
+      }
+    };
+  }, [file]);
+
   return (
     <PersonalInfoContainer>
       <InfoContainer>
-        <div>
+        <PersonalHeading>
           <MainHeader>პირადი ინფო</MainHeader>
-          <LineSecond src={line} />
-        </div>
+          <PerP>1/4</PerP>
+        </PersonalHeading>
         <form>
           <NameLastNameBox>
             <InputBox>
@@ -83,7 +118,7 @@ function PersonalInfo({ uploadHandler, file }) {
               type="file"
               name="imageupload"
               {...register("image")}
-              onChange={uploadHandler}
+              onChange={changeHandler}
               placeholder="aird"
             ></ImageInput>
           </ImageContainer>
@@ -146,30 +181,41 @@ function PersonalInfo({ uploadHandler, file }) {
             </InputParagraph>
           </MobileBox>
           <Link to={"/Experience"}>
-            <button type="button">შემდეგი</button>
+            <NextPage type="button">შემდეგი</NextPage>
           </Link>
         </form>
       </InfoContainer>
       <LiveInfo>
         <p>{watch("firstName")}</p>
         <p>{watch("lastName")}</p>
-        <img src={file} />
+        <img src={localStorage.getItem("image")} />
       </LiveInfo>
     </PersonalInfoContainer>
   );
 }
 export default PersonalInfo;
 
+const PersonalHeading = styled.div`
+  display: flex;
+  width: 798px;
+  border-bottom: 1px solid #c1c1c1;
+  margin-top: 47px;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+`;
+
 const MainHeader = styled.h1`
   font-size: 24px;
-  margin-top: 47px;
   font-weight: 700;
   color: #1a1a1a;
   font-family: HelveticaNeue;
 `;
-
-const LineSecond = styled.img`
-  width: 798px;
+const PerP = styled.p`
+  font-size: 20px;
+  font-weight: 400;
+  color: #1a1a1a;
+  font-family: HelveticaNeue;
 `;
 
 const PersonalInfoContainer = styled.div`
@@ -353,4 +399,16 @@ const InputParagraph = styled.p`
   font-size: 14px;
   font-family: HelveticaNeue;
   color: #2e2e2e;
+`;
+
+const NextPage = styled.button`
+  width: 151px;
+  height: 48px;
+  border: none;
+  background-color: #6b40e3;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: HelveticaNeue;
 `;
