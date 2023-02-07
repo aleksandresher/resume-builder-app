@@ -8,7 +8,7 @@ import sucLogo from "../assets/success.png";
 import { validate } from "graphql";
 import { Link } from "react-router-dom";
 
-function PersonalInfo({ uploadHandler }) {
+function PersonalInfo({ file, changeHandler }) {
   // const [file, setFile] = useState("");
 
   // function uploadHandler(e) {
@@ -38,40 +38,40 @@ function PersonalInfo({ uploadHandler }) {
     exclude: ["baz"],
   });
 
-  const imageMimeType = /image\/(png|jpg|jpeg)/i;
+  // const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
-  const [file, setFile] = useState(null);
-  const [fileDataURL, setFileDataURL] = useState(null);
+  // const [file, setFile] = useState(null);
+  // const [fileDataURL, setFileDataURL] = useState(null);
 
-  const changeHandler = (e) => {
-    const file = e.target.files[0];
-    if (!file.type.match(imageMimeType)) {
-      alert("Image mime type is not valid");
-      return;
-    }
-    setFile(file);
-  };
-  useEffect(() => {
-    let fileReader,
-      isCancel = false;
-    if (file) {
-      fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        const { result } = e.target;
-        if (result && !isCancel) {
-          setFileDataURL(result);
-          localStorage.setItem("image", result);
-        }
-      };
-      fileReader.readAsDataURL(file);
-    }
-    return () => {
-      isCancel = true;
-      if (fileReader && fileReader.readyState === 1) {
-        fileReader.abort();
-      }
-    };
-  }, [file]);
+  // const changeHandler = (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file.type.match(imageMimeType)) {
+  //     alert("Image mime type is not valid");
+  //     return;
+  //   }
+  //   setFile(file);
+  // };
+  // useEffect(() => {
+  //   let fileReader,
+  //     isCancel = false;
+  //   if (file) {
+  //     fileReader = new FileReader();
+  //     fileReader.onload = (e) => {
+  //       const { result } = e.target;
+  //       if (result && !isCancel) {
+  //         setFileDataURL(result);
+  //         localStorage.setItem("image", result);
+  //       }
+  //     };
+  //     fileReader.readAsDataURL(file);
+  //   }
+  //   return () => {
+  //     isCancel = true;
+  //     if (fileReader && fileReader.readyState === 1) {
+  //       fileReader.abort();
+  //     }
+  //   };
+  // }, [file]);
 
   return (
     <PersonalInfoContainer>
@@ -188,7 +188,7 @@ function PersonalInfo({ uploadHandler }) {
       <LiveInfo>
         <p>{watch("firstName")}</p>
         <p>{watch("lastName")}</p>
-        <img src={localStorage.getItem("image")} />
+        <img src={file} />
       </LiveInfo>
     </PersonalInfoContainer>
   );
@@ -314,9 +314,7 @@ const InputField = styled.input`
   }
 `;
 
-const LiveInfo = styled.div`
-  width: 40%;
-`;
+const LiveInfo = styled.div``;
 
 const TextAreaField = styled.textarea`
   width: 798px;

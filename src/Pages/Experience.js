@@ -121,10 +121,10 @@ function Experience(props) {
         </Link>
       </ExperienceInputs>
 
-      <LineInfo>
+      <LiveInfo>
         <p>sdfsdfsdf</p>
-        <img src={props.image} />
-      </LineInfo>
+        <img src={props.file} />
+      </LiveInfo>
     </ExperienceContainer>
   );
 }
@@ -142,7 +142,9 @@ const ExperienceInputs = styled.div`
   background-color: #f9f9f9;
 `;
 
-const LineInfo = styled.div``;
+const LiveInfo = styled.div`
+  width: 40%;
+`;
 
 const ExperienceHeader = styled.div`
   display: flex;
@@ -168,6 +170,7 @@ const ExpP = styled.p`
 `;
 
 const ExperienceForm = styled.form`
+  width: 798px;
   border-bottom: 1px solid #c1c1c1;
   padding-bottom: 50px;
   margin-bottom: 50px;
