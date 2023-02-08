@@ -6,6 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Education from "./Pages/Education";
+import { StateMachineProvider, createStore } from "little-state-machine";
 
 function App() {
   // const [file, setFile] = useState(localStorage.getItem("image"));
@@ -21,6 +22,27 @@ function App() {
   //   setData({ ...data, value });
   // }
   // console.log(data);
+
+  createStore({
+    user: {
+      name: "",
+      surname: "",
+      email: "",
+      phone_number: "",
+      experience: [
+        {
+          position: "",
+          employer: "",
+        },
+      ],
+      education: [
+        {
+          institute: "",
+          degree: "",
+        },
+      ],
+    },
+  });
 
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
@@ -58,31 +80,33 @@ function App() {
     };
   }, [file]);
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/Personal"
-          element={
-            <PersonalInfo
-              // updateUserData={updateUserData}
-              changeHandler={changeHandler}
-              file={localStorage.getItem("image")}
-            />
-          }
-        />
-        <Route
-          path="/Experience"
-          element={
-            <Experience
-              file={localStorage.getItem("image")}
-              // updateUserData={updateUserData}
-            />
-          }
-        />
-        <Route path="/Education" element={<Education />} />
-      </Routes>
-    </div>
+    <StateMachineProvider>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/Personal"
+            element={
+              <PersonalInfo
+                // updateUserData={updateUserData}
+                changeHandler={changeHandler}
+                file={localStorage.getItem("image")}
+              />
+            }
+          />
+          <Route
+            path="/Experience"
+            element={
+              <Experience
+                file={localStorage.getItem("image")}
+                // updateUserData={updateUserData}
+              />
+            }
+          />
+          <Route path="/Education" element={<Education />} />
+        </Routes>
+      </div>
+    </StateMachineProvider>
   );
 }
 

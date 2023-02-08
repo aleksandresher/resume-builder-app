@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import Select from "react-select";
+import { useStateMachine } from "little-state-machine";
+import updateAction from "../updateAction";
 
 function Education() {
   const {

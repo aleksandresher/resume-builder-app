@@ -1,9 +1,21 @@
 import useFormPersist from "react-hook-form-persist";
 import styled from "styled-components";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useStateMachine } from "little-state-machine";
+import updateAction from "../updateAction";
 
 function Experience(props) {
+  const { actions, state } = useStateMachine({
+    updateAction,
+  });
+
+  const navigate = useNavigate();
+  const onSubmit = (data) => {
+    actions.updateAction(data);
+    console.log(JSON.stringify(state, null, 2));
+  };
+
   const {
     handleSubmit,
     control,
@@ -25,6 +37,7 @@ function Experience(props) {
       ],
     },
   });
+  const user = watch("user");
 
   const { fields, append } = useFieldArray({ control, name: "user" });
 
@@ -51,7 +64,7 @@ function Experience(props) {
 
         {fields.map((field, index) => {
           return (
-            <ExperienceForm key={field.id}>
+            <ExperienceForm key={field.id} onSubmit={handleSubmit(onSubmit)}>
               <PositionAndEmployerBox>
                 <InputLabel htmlFor="firstName">თანამდებობა</InputLabel>
                 <PositionAndEmployerInput
@@ -108,6 +121,7 @@ function Experience(props) {
                   })}
                 ></TextAreaField>
               </JobDescription>
+              <input type="submit" />
             </ExperienceForm>
           );
         })}
@@ -116,7 +130,7 @@ function Experience(props) {
           მეტი გამოცდილების დამატება
         </AppendButton>
 
-        <Buttons>
+        {/* <Buttons>
           <Link to={"/Personal"}>
             <PreBtn type="button">წინა</PreBtn>
           </Link>
@@ -129,20 +143,16 @@ function Experience(props) {
               შემდეგი
             </NextBtn>
           </Link>
-        </Buttons>
+        </Buttons> */}
       </ExperienceInputs>
-
+      {/* 
       <LiveInfo>
-        {userData.map(
-          ({ positon, employer, endDate, startDate, description }) => {}
-        )}
-
         {userData?.map(({ positin, employer, index }) => (
           <p key={employer}>{employer}</p>
         ))}
-        <p>sdfsdfsdf</p>
+
         <img src={props.file} />
-      </LiveInfo>
+      </LiveInfo> */}
     </ExperienceContainer>
   );
 }

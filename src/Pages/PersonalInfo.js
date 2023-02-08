@@ -6,9 +6,21 @@ import { useEffect, useState } from "react";
 import line from "../assets/Line.png";
 import sucLogo from "../assets/success.png";
 import { validate } from "graphql";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import updateAction from "../updateAction";
+import { useStateMachine } from "little-state-machine";
 
 function PersonalInfo({ file, changeHandler, updateUserData }) {
+  const { actions, state } = useStateMachine({
+    updateAction,
+  });
+
+  const navigate = useNavigate();
+  const onSubmit = (data) => {
+    actions.updateAction(data);
+    navigate("/Experience");
+    console.log(JSON.stringify(data));
+  };
   // const [file, setFile] = useState("");
 
   // function uploadHandler(e) {
@@ -29,6 +41,7 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
 
     formState: { errors, isValid },
   } = useForm({
+    defaultValues: state.user,
     mode: "onChange",
   });
 
@@ -39,9 +52,9 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
     exclude: ["baz"],
   });
 
-  const onSubmit = (data) => {
-    console.log(JSON.stringify(data));
-  };
+  // const onSubmit = (data) => {
+  //   console.log(JSON.stringify(data));
+  // };
 
   // const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
@@ -194,13 +207,14 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
             უნდა აკმაყოფილებდეს ქართული ნომრის ფორმატს
           </InputParagraph>
         </MobileBox>
-
+        <button type="submit" />
+        {/* 
         <NextButton>
           <Link to={"/Experience"}>
             <NextPage type="button">შემდეგი</NextPage>
           </Link>
         </NextButton>
-        <button type="submit">click</button>
+        <button type="submit">click</button> */}
       </InfoContainer>
       <LiveInfo>
         <p>{watch("firstName")}</p>
