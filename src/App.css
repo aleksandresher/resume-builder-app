@@ -11,8 +11,6 @@
 .App {
   display: flex;
   height: 100vh;
-  align-self: center;
-  justify-content: center;
 
   background-repeat: no-repeat;
 }

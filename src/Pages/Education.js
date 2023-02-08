@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
@@ -21,6 +21,7 @@ function Education() {
           degree: "",
           due_date: "",
           description: "",
+          gender: "",
         },
       ],
     },
@@ -28,16 +29,13 @@ function Education() {
 
   const { fields, append } = useFieldArray({ control, name: "educations" });
 
-  useFormPersist("storage", {
+  useFormPersist("education", {
     watch,
     setValue,
     storage: window.localStorage,
   });
   const [degree, setDegree] = useState();
   const [error, setError] = useState();
-
-  //   console.log(degree);
-  //   console.log(error);
 
   async function getDegree() {
     try {
@@ -50,17 +48,49 @@ function Education() {
       const data = await response.json();
 
       setDegree(data);
+      localStorage.setItem("degree", degree);
+      // localStorage.setItem("dgr", degree);
     } catch (error) {
       setError(error.message);
     }
   }
-  console.log(degree);
+  // const [allData, setAllData] = useState({});
+  // let firstPageInfo = localStorage.getItem("storageKey");
+  // const { firstName, lastName, email, mobile } = firstPageInfo;
+  // const image = localStorage.getItem("image");
+  // const experience = localStorage.getItem("storage");
+  // const education = localStorage.getItem("education");
+
+  // function updateData() {
+  //   setAllData({
+  //     ...allData,
+  //     firstPageInfo,
+  //     experiene: experience,
+  //     education: education,
+  //   });
+  // }
+
+  // console.log(allData);
+  // console.log(firstName);
+
+  // console.log(firstPageInfo);
+  // console.log(image);
+  // console.log(experience);
+  // console.log(getValues("educations"));
+
+  // console.log(watch(["educations"]).educations);
+
+  // const gotValue = localStorage.getItem("storage");
+  // console.log(gotValue);
 
   return (
     <EducationContainer>
       <EducationInformation>
         <EducationHeader>
           <EdHeading>განათლება</EdHeading>
+          {/* <button type="button" onClick={updateData}>
+            click to update
+          </button> */}
           <EdP>2/4</EdP>
         </EducationHeader>
 
@@ -80,20 +110,26 @@ function Education() {
                 <InputParagraph>მინუმუმ 2 სიმბოლო</InputParagraph>
               </InstituteBox>
 
+              <select {...register(`educations.${index}.gender`)}>
+                <option value="female">female</option>
+                <option value="male">male</option>
+                <option value="other">other</option>
+              </select>
+
               <DegreeAndDateContainer>
                 <Degree>
                   <InputLabel>ხარისხი</InputLabel>
-                  <select
+                  <DegreeSelect
                     onClick={getDegree}
                     {...register(`educations.${index}.degree`)}
                   >
                     <option value="">აირჩიე ხარისხი</option>
                     {degree?.map(({ id, title }) => (
-                      <option key={id} value={title}>
+                      <DegreeOption key={id} value={title}>
                         {title}
-                      </option>
+                      </DegreeOption>
                     ))}
-                  </select>
+                  </DegreeSelect>
                 </Degree>
 
                 <EndDate>
@@ -130,13 +166,12 @@ function Education() {
 export default Education;
 
 const EducationContainer = styled.div`
-  display: flex;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
 `;
 const EducationInformation = styled.div`
   padding-left: 126px;
   padding-right: 126px;
-  width: 1098px;
   background-color: #f9f9f9;
 `;
 const EducationLive = styled.div``;
@@ -192,6 +227,7 @@ const InstituteInput = styled.input`
   width: 798px;
   height: 48px;
   padding: 13px 16px;
+  font-size: 16px;
   color: rgba(0, 0, 0, 0.6);
 `;
 
@@ -206,6 +242,16 @@ const DegreeAndDateContainer = styled.div`
   display: flex;
   gap: 56px;
   margin-top: 10px;
+`;
+
+const DegreeSelect = styled.select`
+  width: 371px;
+  height: 48px;
+  border-radius: 4px;
+`;
+
+const DegreeOption = styled.option`
+  font-size: 16px;
 `;
 
 const Degree = styled.div`

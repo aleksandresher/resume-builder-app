@@ -15,12 +15,20 @@ function App() {
   //   localStorage.setItem("image", file);
   // }
 
+  // const [data, setData] = useState();
+
+  // function updateUserData(value) {
+  //   setData({ ...data, value });
+  // }
+  // console.log(data);
+
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(null);
 
   const changeHandler = (e) => {
+    console.log("clikder");
     const file = e.target.files[0];
     if (!file.type.match(imageMimeType)) {
       alert("Image mime type is not valid");
@@ -57,6 +65,7 @@ function App() {
           path="/Personal"
           element={
             <PersonalInfo
+              // updateUserData={updateUserData}
               changeHandler={changeHandler}
               file={localStorage.getItem("image")}
             />
@@ -64,7 +73,12 @@ function App() {
         />
         <Route
           path="/Experience"
-          element={<Experience file={localStorage.getItem("image")} />}
+          element={
+            <Experience
+              file={localStorage.getItem("image")}
+              // updateUserData={updateUserData}
+            />
+          }
         />
         <Route path="/Education" element={<Education />} />
       </Routes>

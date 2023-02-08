@@ -34,6 +34,10 @@ function Experience(props) {
     storage: window.localStorage,
   });
 
+  console.log(watch("user"));
+
+  let userData = watch("user");
+  // const experienceData = localStorage.getItem("storage");
   {
     /* <img src={props.image} /> */
   }
@@ -55,7 +59,7 @@ function Experience(props) {
                   placeholder="დეველოპერი, დიზაინერი, ა.შ"
                   {...register(`user.${index}.position`, {
                     required: true,
-                    minLength: { value: 2 },
+                    minLength: { value: 2, message: "error in value" },
                   })}
                 ></PositionAndEmployerInput>
                 <InputParagraph>მინუმუმ 2 სიმბოლო</InputParagraph>
@@ -112,16 +116,30 @@ function Experience(props) {
           მეტი გამოცდილების დამატება
         </AppendButton>
 
-        <Link to={"/Personal"}>
-          <button>წინა</button>
-        </Link>
+        <Buttons>
+          <Link to={"/Personal"}>
+            <PreBtn type="button">წინა</PreBtn>
+          </Link>
 
-        <Link to={"/Education"}>
-          <button type="button">შემდეგი</button>
-        </Link>
+          <Link to={"/Education"}>
+            <NextBtn
+              type="button"
+              // onClick={() => props.updateUserData(experienceData)}
+            >
+              შემდეგი
+            </NextBtn>
+          </Link>
+        </Buttons>
       </ExperienceInputs>
 
       <LiveInfo>
+        {userData.map(
+          ({ positon, employer, endDate, startDate, description }) => {}
+        )}
+
+        {userData?.map(({ positin, employer, index }) => (
+          <p key={employer}>{employer}</p>
+        ))}
         <p>sdfsdfsdf</p>
         <img src={props.file} />
       </LiveInfo>
@@ -131,20 +149,17 @@ function Experience(props) {
 export default Experience;
 
 const ExperienceContainer = styled.div`
-  display: flex;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
 `;
 
 const ExperienceInputs = styled.div`
   padding-left: 126px;
   padding-right: 126px;
-  width: 1098px;
   background-color: #f9f9f9;
 `;
 
-const LiveInfo = styled.div`
-  width: 40%;
-`;
+const LiveInfo = styled.div``;
 
 const ExperienceHeader = styled.div`
   display: flex;
@@ -292,4 +307,35 @@ const AppendButton = styled.button`
   color: #fff;
   font-family: HelveticaNeue;
   font-weight: 500;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 115px;
+  width: 798;
+  height: 48px;
+  margin-bottom: 65px;
+`;
+
+const PreBtn = styled.button`
+  color: #fff;
+  font-size: 16px;
+  font-family: HelveticaNeue;
+  width: 113px;
+  height: 48px;
+  border: none;
+  background-color: #6b40e3;
+  border-radius: 4px;
+`;
+
+const NextBtn = styled.button`
+  width: 151px;
+  height: 48px;
+  color: #fff;
+  font-size: 16px;
+  font-family: HelveticaNeue;
+  border: none;
+  background-color: #6b40e3;
+  border-radius: 4px;
 `;
