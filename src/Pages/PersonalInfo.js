@@ -3,24 +3,25 @@ import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import warLogo from "../assets/warning.png";
 import { useEffect, useState } from "react";
-import line from "../assets/Line.png";
+
 import sucLogo from "../assets/success.png";
-import { validate } from "graphql";
+
 import { Link, useNavigate } from "react-router-dom";
-import updateAction from "../updateAction";
-import { useStateMachine } from "little-state-machine";
+import { useContext } from "react";
+import UserContext from "../context/userContext";
 
 function PersonalInfo({ file, changeHandler, updateUserData }) {
-  const { actions, state } = useStateMachine({
-    updateAction,
-  });
+  const { data, setData } = useContext(UserContext);
+  // const { actions, state } = useStateMachine({
+  //   updateAction,
+  // });
 
-  const navigate = useNavigate();
-  const onSubmit = (data) => {
-    actions.updateAction(data);
-    navigate("/Experience");
-    console.log(JSON.stringify(data));
-  };
+  // const navigate = useNavigate();
+  // const onSubmit = (data) => {
+  //   actions.updateAction(data);
+  //   navigate("/Experience");
+  //   // console.log(JSON.stringify(data));
+  // };
   // const [file, setFile] = useState("");
 
   // function uploadHandler(e) {
@@ -41,7 +42,7 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
 
     formState: { errors, isValid },
   } = useForm({
-    defaultValues: state.user,
+    defaultValues: {},
     mode: "onChange",
   });
 
@@ -51,6 +52,24 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
     storage: window.localStorage, // default window.sessionStorage
     exclude: ["baz"],
   });
+
+  // const navigate = useNavigate();
+  // const { actions, state } = useStateMachine({ updateAction });
+  // const onSubmit = (data) => {
+  //   actions.updateAction(data);
+  //   navigate("/Experience");
+  // };
+
+  function clearStorage() {
+    localStorage.clear("storageKey");
+    localStorage.clear("storage");
+  }
+
+  const onSubmit = (values) => {
+    // async request which may result error
+    console.log(values);
+    setData({ values });
+  };
 
   // const onSubmit = (data) => {
   //   console.log(JSON.stringify(data));
@@ -97,6 +116,9 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
     <PersonalInfoContainer>
       <InfoContainer onSubmit={handleSubmit(onSubmit)}>
         <PersonalHeading>
+          <button type="button" onClick={clearStorage}>
+            clear
+          </button>
           <MainHeader>პირადი ინფო</MainHeader>
           <PerP>1/4</PerP>
           {/* <button onClick={() => updateUserData(data)} type="button">
@@ -143,7 +165,7 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
               type="file"
               name="imageupload"
               {...register("image")}
-              onChange={changeHandler}
+              // onChange={changeHandler}
               placeholder="aird"
             ></ImageInput>
           </label>
@@ -207,14 +229,14 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
             უნდა აკმაყოფილებდეს ქართული ნომრის ფორმატს
           </InputParagraph>
         </MobileBox>
-        <button type="submit" />
-        {/* 
+        {/* <button type="submit" /> */}
+
         <NextButton>
           <Link to={"/Experience"}>
             <NextPage type="button">შემდეგი</NextPage>
           </Link>
         </NextButton>
-        <button type="submit">click</button> */}
+        <button type="submit">click</button>
       </InfoContainer>
       <LiveInfo>
         <p>{watch("firstName")}</p>

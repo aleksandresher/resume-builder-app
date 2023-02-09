@@ -5,8 +5,11 @@ import useFormPersist from "react-hook-form-persist";
 import Select from "react-select";
 import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
+import UserContext from "../context/userContext";
+import { useContext } from "react";
 
 function Education() {
+  const { data, setData } = useContext(UserContext);
   const {
     handleSubmit,
     control,
@@ -23,7 +26,6 @@ function Education() {
           degree: "",
           due_date: "",
           description: "",
-          gender: "",
         },
       ],
     },
@@ -31,11 +33,33 @@ function Education() {
 
   const { fields, append } = useFieldArray({ control, name: "educations" });
 
+  // const { actions, state } = useStateMachine({
+  //   updateAction,
+  // });
+
+  // const onSubmit = (data) => {
+  //   actions.updateAction(data);
+  //   console.log(JSON.stringify(state, null, 1));
+  // };
+
   useFormPersist("education", {
     watch,
     setValue,
     storage: window.localStorage,
   });
+
+  const onSubmit = (values) => {
+    // async request which may result error
+    setData({ ...data, educations: values });
+    console.log(values);
+  };
+
+  // const { state, actions } = useStateMachine({ updateAction });
+
+  // const onSubmit = (data) => {
+  //   actions.updateAction(data);
+  //   console.log(JSON.stringify(state, null, 2));
+  // };
   const [degree, setDegree] = useState();
   const [error, setError] = useState();
 
@@ -98,7 +122,7 @@ function Education() {
 
         {fields.map((field, index) => {
           return (
-            <EducationForm key={field.id}>
+            <EducationForm key={field.id} onSubmit={handleSubmit(onSubmit)}>
               <InstituteBox>
                 <InputLabel htmlFor="firstName">სასწავლებელი</InputLabel>
                 <InstituteInput
@@ -112,11 +136,11 @@ function Education() {
                 <InputParagraph>მინუმუმ 2 სიმბოლო</InputParagraph>
               </InstituteBox>
 
-              <select {...register(`educations.${index}.gender`)}>
+              {/* <select {...register(`educations.${index}.gender`)}>
                 <option value="female">female</option>
                 <option value="male">male</option>
                 <option value="other">other</option>
-              </select>
+              </select> */}
 
               <DegreeAndDateContainer>
                 <Degree>
@@ -149,11 +173,12 @@ function Education() {
                 <InputLabel>აღწერა</InputLabel>
                 <TextAreaField
                   placeholder="განათლების აღწერა"
-                  {...register(`educations${index}.description`, {
+                  {...register(`educations.${index}.description`, {
                     required: true,
                   })}
                 ></TextAreaField>
               </EducationDescription>
+              <button type="submit">click to console</button>
             </EducationForm>
           );
         })}

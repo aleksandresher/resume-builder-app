@@ -4,17 +4,11 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
+import { useContext } from "react";
+import UserContext from "../context/userContext";
 
 function Experience(props) {
-  const { actions, state } = useStateMachine({
-    updateAction,
-  });
-
-  const navigate = useNavigate();
-  const onSubmit = (data) => {
-    actions.updateAction(data);
-    console.log(JSON.stringify(state, null, 2));
-  };
+  const { data, setData } = useContext(UserContext);
 
   const {
     handleSubmit,
@@ -26,7 +20,7 @@ function Experience(props) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      user: [
+      experience: [
         {
           position: "",
           employer: "",
@@ -37,9 +31,24 @@ function Experience(props) {
       ],
     },
   });
-  const user = watch("user");
+  // const { actions, state } = useStateMachine({
+  //   updateAction,
+  // });
 
-  const { fields, append } = useFieldArray({ control, name: "user" });
+  // const user = watch("user");
+
+  const { fields, append } = useFieldArray({ control, name: "experience" });
+
+  // const { actions, state } = useStateMachine({
+  //   updateAction,
+  // });
+
+  // const navigate = useNavigate();
+  // const onSubmit = (data) => {
+  //   actions.updateAction(data);
+  //   navigate("/Education");
+  //   // console.log(JSON.stringify(state, null, 2));
+  // };
 
   useFormPersist("storage", {
     watch,
@@ -47,9 +56,15 @@ function Experience(props) {
     storage: window.localStorage,
   });
 
-  console.log(watch("user"));
+  const onSubmit = (values) => {
+    // async request which may result error
+    setData({ ...data, experience: values });
+    console.log(values);
+  };
 
-  let userData = watch("user");
+  // console.log(watch("user"));
+
+  // let userData = watch("user");
   // const experienceData = localStorage.getItem("storage");
   {
     /* <img src={props.image} /> */
@@ -70,7 +85,7 @@ function Experience(props) {
                 <PositionAndEmployerInput
                   type="text"
                   placeholder="დეველოპერი, დიზაინერი, ა.შ"
-                  {...register(`user.${index}.position`, {
+                  {...register(`experience.${index}.position`, {
                     required: true,
                     minLength: { value: 2, message: "error in value" },
                   })}
@@ -82,7 +97,7 @@ function Experience(props) {
                 <PositionAndEmployerInput
                   type="text"
                   placeholder="დამსაქმებელი"
-                  {...register(`user.${index}.employer`, {
+                  {...register(`experience.${index}.employer`, {
                     required: true,
                     minLength: { value: 2 },
                   })}
@@ -95,7 +110,7 @@ function Experience(props) {
                   <InputLabel>დაწყების რიცხვი</InputLabel>
                   <StartDateInput
                     type="date"
-                    {...register(`user.${index}.startDate`, {
+                    {...register(`experience.${index}.startDate`, {
                       required: true,
                     })}
                   />
@@ -105,7 +120,7 @@ function Experience(props) {
                   <InputLabel>დამთავრების რიცხვი</InputLabel>
                   <EndDateInput
                     type="date"
-                    {...register(`user.${index}.endDate`, {
+                    {...register(`experience.${index}.endDate`, {
                       required: true,
                     })}
                   />
@@ -116,12 +131,12 @@ function Experience(props) {
                 <InputLabel>აღწერა</InputLabel>
                 <TextAreaField
                   placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
-                  {...register(`user${index}.description`, {
+                  {...register(`experience.${index}.description`, {
                     required: true,
                   })}
                 ></TextAreaField>
               </JobDescription>
-              <input type="submit" />
+              <button type="submit">click to console</button>
             </ExperienceForm>
           );
         })}
@@ -130,7 +145,7 @@ function Experience(props) {
           მეტი გამოცდილების დამატება
         </AppendButton>
 
-        {/* <Buttons>
+        <Buttons>
           <Link to={"/Personal"}>
             <PreBtn type="button">წინა</PreBtn>
           </Link>
@@ -143,7 +158,7 @@ function Experience(props) {
               შემდეგი
             </NextBtn>
           </Link>
-        </Buttons> */}
+        </Buttons>
       </ExperienceInputs>
       {/* 
       <LiveInfo>

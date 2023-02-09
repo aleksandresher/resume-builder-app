@@ -4,13 +4,17 @@ import PersonalInfo from "./Pages/PersonalInfo";
 import Experience from "./Pages/Experience";
 import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Education from "./Pages/Education";
-import { StateMachineProvider, createStore } from "little-state-machine";
+import UserContext from "../src/context/userContext";
+// import { StateMachineProvider, createStore } from "little-state-machine";
 
 function App() {
   // const [file, setFile] = useState(localStorage.getItem("image"));
 
+  const [data, setData] = useState();
+
+  console.log(data);
   // function uploadHandler(e) {
   //   setFile(URL.createObjectURL(e.target.files[0]));
   //   localStorage.setItem("image", file);
@@ -23,26 +27,27 @@ function App() {
   // }
   // console.log(data);
 
-  createStore({
-    user: {
-      name: "",
-      surname: "",
-      email: "",
-      phone_number: "",
-      experience: [
-        {
-          position: "",
-          employer: "",
-        },
-      ],
-      education: [
-        {
-          institute: "",
-          degree: "",
-        },
-      ],
-    },
-  });
+  // createStore({
+  //   //   user: {
+  //   //     // name: "",
+  //   //     // surname: "",
+  //   //     // email: "",
+  //   //     // phone_number: "",
+  //   //     // experience: [
+  //   //     //   {
+  //   //     //     position: "",
+  //   //     //     employer: "",
+  //   //     //   },
+  //   //     // ],
+  //   //     // education: [
+  //   //     //   {
+  //   //     //     institute: "",
+  //   //     //     degree: "",
+  //   //     //   },
+  //   //     // ],
+  // });
+
+  // createStore({});
 
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
@@ -80,7 +85,7 @@ function App() {
     };
   }, [file]);
   return (
-    <StateMachineProvider>
+    <UserContext.Provider value={{ data, setData }}>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -106,7 +111,7 @@ function App() {
           <Route path="/Education" element={<Education />} />
         </Routes>
       </div>
-    </StateMachineProvider>
+    </UserContext.Provider>
   );
 }
 
