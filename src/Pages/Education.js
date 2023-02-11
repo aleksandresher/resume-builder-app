@@ -7,8 +7,28 @@ import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
 import UserContext from "../context/userContext";
 import { useContext } from "react";
+import axios from "axios";
 
 function Education() {
+  // function handleSending(event) {
+  //   event.preventDefault();
+  //   const headers = {
+  //     "Content-Type": "multipart/form-data",
+  //   };
+
+  //   const config = {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   };
+  //   const url = "https://resume.redberryinternship.ge/api/cvs";
+
+  //   axios
+  //     .post(url, testData, config)
+  //     .then((res) => console.log(res.data))
+  //     .catch((err) => console.log(err));
+  // }
+
   const { data, setData } = useContext(UserContext);
   const {
     handleSubmit,
@@ -23,7 +43,7 @@ function Education() {
       educations: [
         {
           institute: "",
-          degree: "",
+          degree_id: "",
           due_date: "",
           description: "",
         },
@@ -31,16 +51,9 @@ function Education() {
     },
   });
 
+  console.log(data);
+
   const { fields, append } = useFieldArray({ control, name: "educations" });
-
-  // const { actions, state } = useStateMachine({
-  //   updateAction,
-  // });
-
-  // const onSubmit = (data) => {
-  //   actions.updateAction(data);
-  //   console.log(JSON.stringify(state, null, 1));
-  // };
 
   useFormPersist("education", {
     watch,
@@ -48,18 +61,13 @@ function Education() {
     storage: window.localStorage,
   });
 
-  const onSubmit = (values) => {
-    // async request which may result error
-    setData({ ...data, educations: values });
-    console.log(values);
-  };
-
-  // const { state, actions } = useStateMachine({ updateAction });
-
-  // const onSubmit = (data) => {
-  //   actions.updateAction(data);
-  //   console.log(JSON.stringify(state, null, 2));
+  let forUpdate = watch("educations");
+  // const onSubmit = (values) => {
+  //   // async request which may result error
+  //   setData({ ...data, educations: values });
+  //   console.log(values);
   // };
+
   const [degree, setDegree] = useState();
   const [error, setError] = useState();
 
@@ -87,28 +95,39 @@ function Education() {
   // const experience = localStorage.getItem("storage");
   // const education = localStorage.getItem("education");
 
-  // function updateData() {
-  //   setAllData({
-  //     ...allData,
-  //     firstPageInfo,
-  //     experiene: experience,
-  //     education: education,
-  //   });
-  // }
+  useEffect(() => {
+    setData({
+      ...data,
+      educations: getValues("educations"),
+    });
+  }, [forUpdate]);
 
-  // console.log(allData);
-  // console.log(firstName);
+  function updateData(values) {
+    setData({
+      ...data,
+      educations: getValues("educations"),
+    });
+    console.log(data);
+  }
 
-  // console.log(firstPageInfo);
-  // console.log(image);
-  // console.log(experience);
-  // console.log(getValues("educations"));
+  function handleSending(event) {
+    event.preventDefault();
+    const headers = {
+      "Content-Type": "multipart/form-data",
+    };
 
-  // console.log(watch(["educations"]).educations);
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    const url = "https://resume.redberryinternship.ge/api/cvs";
 
-  // const gotValue = localStorage.getItem("storage");
-  // console.log(gotValue);
-
+    axios
+      .post(url, data, config)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  }
   return (
     <EducationContainer>
       <EducationInformation>
@@ -122,7 +141,11 @@ function Education() {
 
         {fields.map((field, index) => {
           return (
-            <EducationForm key={field.id} onSubmit={handleSubmit(onSubmit)}>
+            <EducationForm
+              key={field.id}
+              id="form"
+              onSubmit={handleSubmit(updateData)}
+            >
               <InstituteBox>
                 <InputLabel htmlFor="firstName">სასწავლებელი</InputLabel>
                 <InstituteInput
@@ -147,11 +170,11 @@ function Education() {
                   <InputLabel>ხარისხი</InputLabel>
                   <DegreeSelect
                     onClick={getDegree}
-                    {...register(`educations.${index}.degree`)}
+                    {...register(`educations.${index}.degree_id`)}
                   >
                     <option value="">აირჩიე ხარისხი</option>
                     {degree?.map(({ id, title }) => (
-                      <DegreeOption key={id} value={title}>
+                      <DegreeOption key={id} value={id}>
                         {title}
                       </DegreeOption>
                     ))}
@@ -185,6 +208,9 @@ function Education() {
         <AppendButton type="button" onClick={() => append()}>
           სხვა სასწავლებლის დამატება
         </AppendButton>
+        <button type="button" onClick={handleSending}>
+          send Data
+        </button>
       </EducationInformation>
       <EducationLive></EducationLive>
     </EducationContainer>

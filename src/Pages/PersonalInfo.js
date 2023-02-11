@@ -2,35 +2,26 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import warLogo from "../assets/warning.png";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import sucLogo from "../assets/success.png";
+import axios from "axios";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "../context/userContext";
 
-function PersonalInfo({ file, changeHandler, updateUserData }) {
+function PersonalInfo({ updateUserData }) {
+  // const inputRef = useRef(null);
   const { data, setData } = useContext(UserContext);
-  // const { actions, state } = useStateMachine({
-  //   updateAction,
-  // });
 
-  // const navigate = useNavigate();
-  // const onSubmit = (data) => {
-  //   actions.updateAction(data);
-  //   navigate("/Experience");
-  //   // console.log(JSON.stringify(data));
-  // };
-  // const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
+  const [fileDataURL, setFileDataURL] = useState(null);
 
-  // function uploadHandler(e) {
-  //   setFile(URL.createObjectURL(e.target.files[0]));
-  // }
+  const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
-  // useEffect(() => {
-  //   localStorage.setItem("image", JSON.stringify(file));
-  // }, [file]);
+  const [image, setImage] = useState(null);
+  const [imgUrl, setImgUrl] = useState(null);
 
   const {
     register,
@@ -55,62 +46,45 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
 
   // const navigate = useNavigate();
   // const { actions, state } = useStateMachine({ updateAction });
-  // const onSubmit = (data) => {
-  //   actions.updateAction(data);
-  //   navigate("/Experience");
-  // };
+  const onSubmit = (values) => {
+    // async request which may result error
+    setData({
+      ...data,
+      name: values.name,
+      surname: values.surname,
+      email: values.email,
+      phone_number: values.phone_number,
+      about_me: values.about_me,
+      image: image,
+    });
+    navigate("/Experience");
+    console.log(data);
+    localStorage.setItem("personalInfo", values);
+  };
 
   function clearStorage() {
     localStorage.clear("storageKey");
     localStorage.clear("storage");
   }
 
-  const onSubmit = (values) => {
-    // async request which may result error
-    console.log(values);
-    setData({ values });
+  const navigate = useNavigate();
+
+  const changeHandler = (event) => {
+    const files = event.target.files;
+    setImage(event.target.files[0]);
+    if (files) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        localStorage.setItem("image", reader.result);
+        setImgUrl(reader.result);
+        const result = reader.result?.toString();
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  // const onSubmit = (data) => {
-  //   console.log(JSON.stringify(data));
-  // };
-
-  // const imageMimeType = /image\/(png|jpg|jpeg)/i;
-
-  // const [file, setFile] = useState(null);
-  // const [fileDataURL, setFileDataURL] = useState(null);
-
-  // const changeHandler = (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file.type.match(imageMimeType)) {
-  //     alert("Image mime type is not valid");
-  //     return;
-  //   }
-  //   setFile(file);
-  // };
-  // useEffect(() => {
-  //   let fileReader,
-  //     isCancel = false;
-  //   if (file) {
-  //     fileReader = new FileReader();
-  //     fileReader.onload = (e) => {
-  //       const { result } = e.target;
-  //       if (result && !isCancel) {
-  //         setFileDataURL(result);
-  //         localStorage.setItem("image", result);
-  //       }
-  //     };
-  //     fileReader.readAsDataURL(file);
-  //   }
-  //   return () => {
-  //     isCancel = true;
-  //     if (fileReader && fileReader.readyState === 1) {
-  //       fileReader.abort();
-  //     }
-  //   };
-  // }, [file]);
-
-  // const data = localStorage.getItem("storageKey");
+  // testData.image = image;
 
   return (
     <PersonalInfoContainer>
@@ -128,11 +102,11 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
 
         <NameLastNameBox>
           <InputBox>
-            <InputLabel htmlFor="firstName">სახელი</InputLabel>
+            <InputLabel htmlFor="name">სახელი</InputLabel>
             <InputField
               type="text"
               placeholder="ანზორ"
-              {...register("firstName", {
+              {...register("name", {
                 pattern: /^[ა-ჰ]+$/,
                 required: true,
                 minLength: { value: 2 },
@@ -141,11 +115,11 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
             <InputParagraph>მინუმუმ 2 ასო, ქართული ასოები</InputParagraph>
           </InputBox>
           <InputBox>
-            <InputLabel htmlFor="lasttName">გვარი</InputLabel>
+            <InputLabel htmlFor="surname">გვარი</InputLabel>
             <InputField
               type="text"
               placeholder="მუმლაძე"
-              {...register("lastName", {
+              {...register("surname", {
                 pattern: /^[ა-ჰ]+$/,
                 required: true,
                 minLength: { value: 2 },
@@ -164,9 +138,9 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
               className="fileUpload"
               type="file"
               name="imageupload"
+              // accept="image/"
               {...register("image")}
-              // onChange={changeHandler}
-              placeholder="aird"
+              onChange={changeHandler}
             ></ImageInput>
           </label>
         </ImageContainer>
@@ -175,7 +149,11 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
           <img src={file} /> */}
         <TextArea>
           <InputLabel>ჩემ შესახებ (არასავალდებულო)</InputLabel>
-          <TextAreaField placeholder="ზოგადი ინფო შენ შესახებ"></TextAreaField>
+          <TextAreaField
+            placeholder="ზოგადი ინფო შენ შესახებ"
+            type="textarea"
+            {...register("about_me")}
+          ></TextAreaField>
         </TextArea>
 
         <EmailBox>
@@ -206,21 +184,17 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
         <MobileBox>
           <InputLabel>მობილური ნომერი</InputLabel>
           <NumberInput
-            type="number"
-            first={getFieldState("mobile").invalid}
-            second={!getFieldState("mobile").isDirty}
+            type="text"
+            first={getFieldState("phone_number").invalid}
+            second={!getFieldState("phone_number").isDirty}
             placeholder="+995 551 12 34 56"
-            {...register("mobile", {
-              // valueAsNumber: true,
-              pattern: {
-                value: /^(\+?995)?(79\d{7}|5\d{8})$/,
-                message: "invalid patern",
-              },
+            {...register("phone_number", {
+              valueAsNumber: false,
             })}
           />
           {errors.mobile ? <NumberError src={warLogo} /> : ""}
-          {getFieldState("mobile").invalid ||
-          !getFieldState("mobile").isDirty ? (
+          {getFieldState("phone_number").invalid ||
+          !getFieldState("phone_number").isDirty ? (
             ""
           ) : (
             <NumberSuccess src={sucLogo} />
@@ -232,18 +206,18 @@ function PersonalInfo({ file, changeHandler, updateUserData }) {
         {/* <button type="submit" /> */}
 
         <NextButton>
-          <Link to={"/Experience"}>
-            <NextPage type="button">შემდეგი</NextPage>
-          </Link>
+          {/* <Link to={"/Experience"}> */}
+          <NextPage type="submit">შემდეგი</NextPage>
+          {/* </Link> */}
         </NextButton>
-        <button type="submit">click</button>
+        {/* <button type="submit">click</button> */}
       </InfoContainer>
       <LiveInfo>
         <p>{watch("firstName")}</p>
         <p>{watch("lastName")}</p>
         <p>{watch("email")}</p>
         <p>{watch("mobile")}</p>
-        <UserImage src={file} />
+        <UserImage src={imgUrl} />
       </LiveInfo>
     </PersonalInfoContainer>
   );

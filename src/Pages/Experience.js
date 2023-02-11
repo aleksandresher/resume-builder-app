@@ -20,12 +20,12 @@ function Experience(props) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      experience: [
+      experiences: [
         {
           position: "",
           employer: "",
-          startDate: "",
-          endDate: "",
+          start_date: "",
+          due_date: "",
           description: "",
         },
       ],
@@ -37,7 +37,7 @@ function Experience(props) {
 
   // const user = watch("user");
 
-  const { fields, append } = useFieldArray({ control, name: "experience" });
+  const { fields, append } = useFieldArray({ control, name: "experiences" });
 
   // const { actions, state } = useStateMachine({
   //   updateAction,
@@ -56,10 +56,14 @@ function Experience(props) {
     storage: window.localStorage,
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = (values) => {
     // async request which may result error
-    setData({ ...data, experience: values });
-    console.log(values);
+    setData({ ...data, experiences: getValues("experiences") });
+    navigate("/Education");
+    console.log(data);
+    localStorage.setItem("experiences", values);
   };
 
   // console.log(watch("user"));
@@ -79,13 +83,17 @@ function Experience(props) {
 
         {fields.map((field, index) => {
           return (
-            <ExperienceForm key={field.id} onSubmit={handleSubmit(onSubmit)}>
+            <ExperienceForm
+              key={field.id}
+              onSubmit={handleSubmit(onSubmit)}
+              id="myform"
+            >
               <PositionAndEmployerBox>
                 <InputLabel htmlFor="firstName">თანამდებობა</InputLabel>
                 <PositionAndEmployerInput
                   type="text"
                   placeholder="დეველოპერი, დიზაინერი, ა.შ"
-                  {...register(`experience.${index}.position`, {
+                  {...register(`experiences.${index}.position`, {
                     required: true,
                     minLength: { value: 2, message: "error in value" },
                   })}
@@ -97,7 +105,7 @@ function Experience(props) {
                 <PositionAndEmployerInput
                   type="text"
                   placeholder="დამსაქმებელი"
-                  {...register(`experience.${index}.employer`, {
+                  {...register(`experiences.${index}.employer`, {
                     required: true,
                     minLength: { value: 2 },
                   })}
@@ -110,7 +118,7 @@ function Experience(props) {
                   <InputLabel>დაწყების რიცხვი</InputLabel>
                   <StartDateInput
                     type="date"
-                    {...register(`experience.${index}.startDate`, {
+                    {...register(`experiences.${index}.start_date`, {
                       required: true,
                     })}
                   />
@@ -120,7 +128,7 @@ function Experience(props) {
                   <InputLabel>დამთავრების რიცხვი</InputLabel>
                   <EndDateInput
                     type="date"
-                    {...register(`experience.${index}.endDate`, {
+                    {...register(`experiences.${index}.due_date`, {
                       required: true,
                     })}
                   />
@@ -131,12 +139,12 @@ function Experience(props) {
                 <InputLabel>აღწერა</InputLabel>
                 <TextAreaField
                   placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
-                  {...register(`experience.${index}.description`, {
+                  {...register(`experiences.${index}.description`, {
                     required: true,
                   })}
                 ></TextAreaField>
               </JobDescription>
-              <button type="submit">click to console</button>
+              {/* <button type="submit">click to console</button> */}
             </ExperienceForm>
           );
         })}
@@ -150,14 +158,15 @@ function Experience(props) {
             <PreBtn type="button">წინა</PreBtn>
           </Link>
 
-          <Link to={"/Education"}>
-            <NextBtn
-              type="button"
-              // onClick={() => props.updateUserData(experienceData)}
-            >
-              შემდეგი
-            </NextBtn>
-          </Link>
+          {/* <Link to={"/Education"}> */}
+          <NextBtn
+            type="submit"
+            form="myform"
+            // onClick={() => props.updateUserData(experienceData)}
+          >
+            შემდეგი
+          </NextBtn>
+          {/* </Link> */}
         </Buttons>
       </ExperienceInputs>
       {/* 
