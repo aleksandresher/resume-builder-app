@@ -9,6 +9,8 @@ import { useContext } from "react";
 import UserContext from "../context/userContext";
 import updateAction from "../updateAction";
 import { useStateMachine } from "little-state-machine";
+import email_icon from "../assets/emailIcon.png";
+import mobile_icon from "../assets/MobIcon.png";
 
 function PersonalInfo({ updateImageFile }) {
   const { actions, state } = useStateMachine({
@@ -199,16 +201,80 @@ function PersonalInfo({ updateImageFile }) {
         {/* <button type="submit">click</button> */}
       </InfoContainer>
       <LiveInfo>
-        <p>{watch("firstName")}</p>
-        <p>{watch("lastName")}</p>
-        <p>{watch("email")}</p>
-        <p>{watch("mobile")}</p>
+        <NameSurname>
+          <Name>{watch("name")}</Name>
+          <Name>{watch("surname")}</Name>
+        </NameSurname>
+        <Box>
+          <Icon src={email_icon} />
+          <Generic>{watch("email")}</Generic>
+        </Box>
+
+        <Box>
+          <Icon src={mobile_icon} />
+          <Generic>{watch("phone_number")}</Generic>
+        </Box>
+
+        <P>ჩემ შესახებ</P>
+        <About>{watch("about_me")}</About>
+
         <UserImage src={imageUrl} />
       </LiveInfo>
     </PersonalInfoContainer>
   );
 }
 export default PersonalInfo;
+
+const P = styled.p`
+  font-size: 18px;
+  font-weight: 700;
+  color: #f93b1d;
+  font-family: HelveticaNeue;
+`;
+
+const About = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  font-family: HelveticaNeue;
+  color: #000;
+  inline-size: 440px;
+  overflow-wrap: break-word;
+`;
+
+const Icon = styled.img``;
+
+const Generic = styled.p`
+  font-size: 18px;
+  font-weight: 400px;
+  color: #1a1a1a;
+  font-family: HelveticaNeue;
+`;
+const UserImage = styled.img`
+  outline: none;
+  width: 246px;
+  height: 246px;
+  border-radius: 50%;
+`;
+
+const NameSurname = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+const Name = styled.p`
+  font-size: 34px;
+  font-weight: 700;
+  font-family: HelveticaNeue;
+  color: #f93b1d;
+`;
+
+const Box = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const TestDiv = styled.div`
+  width: 822px;
+`;
 
 const NextButton = styled.div`
   margin-top: 50px;
@@ -243,7 +309,7 @@ const PerP = styled.p`
 
 const PersonalInfoContainer = styled.div`
   display: grid;
-  grid-template-columns: 4fr 1fr;
+  grid-template-columns: 1028px 900px;
 `;
 
 const NameLastNameBox = styled.div`
@@ -288,6 +354,7 @@ const InfoContainer = styled.form`
   padding-left: 126px;
   padding-right: 126px;
   background-color: #f9f9f9;
+  max-width: 1074px;
 `;
 
 const InputBox = styled.div`
@@ -342,7 +409,10 @@ const InputField = styled.input`
   }
 `;
 
-const LiveInfo = styled.div``;
+const LiveInfo = styled.div`
+  margin-right: 0px;
+  width: 822px;
+`;
 
 const TextAreaField = styled.textarea`
   width: 798px;
@@ -365,12 +435,6 @@ const TextAreaField = styled.textarea`
   }
 `;
 
-const UserImage = styled.img`
-  outline: none;
-  width: 246px;
-  height: 246px;
-  border-radius: 50%;
-`;
 const EmailBox = styled.div`
   display: flex;
   flex-direction: column;
