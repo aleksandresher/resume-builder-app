@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/react-app/static/css/main.6b7884bf.css",
-    "main.js": "/react-app/static/js/main.a044fcbd.js",
-    "static/js/787.b701888c.chunk.js": "/react-app/static/js/787.b701888c.chunk.js",
-    "static/media/background.png": "/react-app/static/media/background.df20a131b2c111044854.png",
-    "static/media/HelveticaNeue.ttc": "/react-app/static/media/HelveticaNeue.67d426c3bd180e2ea838.ttc",
-    "static/media/logo2.png": "/react-app/static/media/logo2.000891862a9bfe5affa5.png",
-    "index.html": "/react-app/index.html",
-    "main.6b7884bf.css.map": "/react-app/static/css/main.6b7884bf.css.map",
-    "main.a044fcbd.js.map": "/react-app/static/js/main.a044fcbd.js.map",
-    "787.b701888c.chunk.js.map": "/react-app/static/js/787.b701888c.chunk.js.map"
+    "main.css": "/aleksandresher/react-app.git/static/css/main.0c9482e4.css",
+    "main.js": "/aleksandresher/react-app.git/static/js/main.e6892c0d.js",
+    "static/js/787.b701888c.chunk.js": "/aleksandresher/react-app.git/static/js/787.b701888c.chunk.js",
+    "static/media/background.png": "/aleksandresher/react-app.git/static/media/background.df20a131b2c111044854.png",
+    "static/media/HelveticaNeue.ttc": "/aleksandresher/react-app.git/static/media/HelveticaNeue.67d426c3bd180e2ea838.ttc",
+    "static/media/logo2.png": "/aleksandresher/react-app.git/static/media/logo2.000891862a9bfe5affa5.png",
+    "index.html": "/aleksandresher/react-app.git/index.html",
+    "main.0c9482e4.css.map": "/aleksandresher/react-app.git/static/css/main.0c9482e4.css.map",
+    "main.e6892c0d.js.map": "/aleksandresher/react-app.git/static/js/main.e6892c0d.js.map",
+    "787.b701888c.chunk.js.map": "/aleksandresher/react-app.git/static/js/787.b701888c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6b7884bf.css",
-    "static/js/main.a044fcbd.js"
+    "static/css/main.0c9482e4.css",
+    "static/js/main.e6892c0d.js"
   ]
 }
