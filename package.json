@@ -1,5 +1,6 @@
 {
-  "name": "my-app",
+  "homepage": "https://aleksandresher.github.com/react-app",
+  "name": "react-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
