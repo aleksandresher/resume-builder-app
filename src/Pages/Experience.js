@@ -2,13 +2,16 @@ import useFormPersist from "react-hook-form-persist";
 import styled from "styled-components";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+
+import { useContext, useEffect } from "react";
+import UserContext from "../context/userContext";
 import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
-import { useContext } from "react";
-import UserContext from "../context/userContext";
 
-function Experience(props) {
-  const { data, setData } = useContext(UserContext);
+function Experience(updateAllData) {
+  const { actions, state } = useStateMachine({
+    updateAction,
+  });
 
   const {
     handleSubmit,
@@ -31,24 +34,8 @@ function Experience(props) {
       ],
     },
   });
-  // const { actions, state } = useStateMachine({
-  //   updateAction,
-  // });
-
-  // const user = watch("user");
 
   const { fields, append } = useFieldArray({ control, name: "experiences" });
-
-  // const { actions, state } = useStateMachine({
-  //   updateAction,
-  // });
-
-  // const navigate = useNavigate();
-  // const onSubmit = (data) => {
-  //   actions.updateAction(data);
-  //   navigate("/Education");
-  //   // console.log(JSON.stringify(state, null, 2));
-  // };
 
   useFormPersist("storage", {
     watch,
@@ -59,20 +46,14 @@ function Experience(props) {
   const navigate = useNavigate();
 
   const onSubmit = (values) => {
-    // async request which may result error
-    setData({ ...data, experiences: getValues("experiences") });
     navigate("/Education");
-    console.log(data);
-    localStorage.setItem("experiences", values);
+    actions.updateAction(values);
   };
 
-  // console.log(watch("user"));
+  let exp = watch("experiences");
 
-  // let userData = watch("user");
-  // const experienceData = localStorage.getItem("storage");
-  {
-    /* <img src={props.image} /> */
-  }
+  const test = localStorage.getItem("storage");
+
   return (
     <ExperienceContainer>
       <ExperienceInputs>

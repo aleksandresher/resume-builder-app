@@ -2,32 +2,29 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import Select from "react-select";
-import { useStateMachine } from "little-state-machine";
-import updateAction from "../updateAction";
+
 import UserContext from "../context/userContext";
 import { useContext } from "react";
 import axios from "axios";
+import { useStateMachine } from "little-state-machine";
+import updateAction from "../updateAction";
 
-function Education() {
-  // function handleSending(event) {
-  //   event.preventDefault();
-  //   const headers = {
-  //     "Content-Type": "multipart/form-data",
-  //   };
+function Education({ imageFile }) {
+  const { actions, state } = useStateMachine({
+    updateAction,
+  });
+  console.log(imageFile);
 
-  //   const config = {
-  //     headers: {
-  //       "Content-Type": "multipart/form-data",
-  //     },
-  //   };
-  //   const url = "https://resume.redberryinternship.ge/api/cvs";
-
-  //   axios
-  //     .post(url, testData, config)
-  //     .then((res) => console.log(res.data))
-  //     .catch((err) => console.log(err));
-  // }
+  useEffect(() => {
+    fetch(imageFile)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const file = new File([blob], "File name", { type: "image/png" });
+        console.log(file);
+        actions.updateAction({ image: file });
+      });
+  }, [actions]);
+  console.log(state);
 
   const { data, setData } = useContext(UserContext);
   const {
@@ -51,8 +48,6 @@ function Education() {
     },
   });
 
-  console.log(data);
-
   const { fields, append } = useFieldArray({ control, name: "educations" });
 
   useFormPersist("education", {
@@ -62,11 +57,9 @@ function Education() {
   });
 
   let forUpdate = watch("educations");
-  // const onSubmit = (values) => {
-  //   // async request which may result error
-  //   setData({ ...data, educations: values });
-  //   console.log(values);
-  // };
+  const onSubmit = (values) => {
+    actions.updateAction(values);
+  };
 
   const [degree, setDegree] = useState();
   const [error, setError] = useState();
@@ -88,27 +81,6 @@ function Education() {
       setError(error.message);
     }
   }
-  // const [allData, setAllData] = useState({});
-  // let firstPageInfo = localStorage.getItem("storageKey");
-  // const { firstName, lastName, email, mobile } = firstPageInfo;
-  // const image = localStorage.getItem("image");
-  // const experience = localStorage.getItem("storage");
-  // const education = localStorage.getItem("education");
-
-  useEffect(() => {
-    setData({
-      ...data,
-      educations: getValues("educations"),
-    });
-  }, [forUpdate]);
-
-  function updateData(values) {
-    setData({
-      ...data,
-      educations: getValues("educations"),
-    });
-    console.log(data);
-  }
 
   function handleSending(event) {
     event.preventDefault();
@@ -124,7 +96,7 @@ function Education() {
     const url = "https://resume.redberryinternship.ge/api/cvs";
 
     axios
-      .post(url, data, config)
+      .post(url, state, config)
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err));
   }
@@ -144,7 +116,7 @@ function Education() {
             <EducationForm
               key={field.id}
               id="form"
-              onSubmit={handleSubmit(updateData)}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <InstituteBox>
                 <InputLabel htmlFor="firstName">სასწავლებელი</InputLabel>

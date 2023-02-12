@@ -3,25 +3,23 @@ import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import warLogo from "../assets/warning.png";
 import { useEffect, useState, useRef } from "react";
-
 import sucLogo from "../assets/success.png";
-import axios from "axios";
-
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "../context/userContext";
+import updateAction from "../updateAction";
+import { useStateMachine } from "little-state-machine";
 
-function PersonalInfo({ updateUserData }) {
-  // const inputRef = useRef(null);
+function PersonalInfo({ updateImageFile }) {
+  const { actions, state } = useStateMachine({
+    updateAction,
+  });
+
+  console.log(state);
   const { data, setData } = useContext(UserContext);
-
-  const [file, setFile] = useState(null);
-  const [fileDataURL, setFileDataURL] = useState(null);
-
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
-
   const [image, setImage] = useState(null);
-  const [imgUrl, setImgUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState();
 
   const {
     register,
@@ -40,26 +38,15 @@ function PersonalInfo({ updateUserData }) {
   useFormPersist("storageKey", {
     watch,
     setValue,
-    storage: window.localStorage, // default window.sessionStorage
+    storage: window.localStorage,
     exclude: ["baz"],
   });
 
-  // const navigate = useNavigate();
-  // const { actions, state } = useStateMachine({ updateAction });
   const onSubmit = (values) => {
-    // async request which may result error
-    setData({
-      ...data,
-      name: values.name,
-      surname: values.surname,
-      email: values.email,
-      phone_number: values.phone_number,
-      about_me: values.about_me,
-      image: image,
-    });
+    actions.updateAction(values);
+    actions.updateAction({ image: image });
     navigate("/Experience");
-    console.log(data);
-    localStorage.setItem("personalInfo", values);
+    localStorage.setItem("personalInfo", data);
   };
 
   function clearStorage() {
@@ -72,19 +59,18 @@ function PersonalInfo({ updateUserData }) {
   const changeHandler = (event) => {
     const files = event.target.files;
     setImage(event.target.files[0]);
+
     if (files) {
       const file = files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        localStorage.setItem("image", reader.result);
-        setImgUrl(reader.result);
+        updateImageFile(reader.result);
+        setImageUrl(reader.result);
         const result = reader.result?.toString();
       };
       reader.readAsDataURL(file);
     }
   };
-
-  // testData.image = image;
 
   return (
     <PersonalInfoContainer>
@@ -217,7 +203,7 @@ function PersonalInfo({ updateUserData }) {
         <p>{watch("lastName")}</p>
         <p>{watch("email")}</p>
         <p>{watch("mobile")}</p>
-        <UserImage src={imgUrl} />
+        <UserImage src={imageUrl} />
       </LiveInfo>
     </PersonalInfoContainer>
   );

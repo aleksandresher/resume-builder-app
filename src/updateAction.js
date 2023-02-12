@@ -1,6 +1,6 @@
-// export default function updateAction(state, payload) {
-//   return {
-//     ...state,
-//     ...payload,
-//   };
-// }
+export default function updateAction(state, payload) {
+  return {
+    ...state,
+    ...payload,
+  };
+}
