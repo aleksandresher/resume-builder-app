@@ -8,13 +8,24 @@ import { useContext } from "react";
 import axios from "axios";
 import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
+import ResultPage from "./ResultPage";
+import { useNavigate } from "react-router-dom";
 
-function Education({ imageFile }) {
+function Education({ imageFile, sendData, updateResultData }) {
   const { actions, state } = useStateMachine({
     updateAction,
   });
   console.log(imageFile);
+  const navigate = useNavigate();
+  // const [resultError, setResultError] = useState(false);
 
+  function controlFunc(res) {
+    if (res.request.statusText === "Created") {
+      updateResultData(res.data);
+      console.log("good job");
+      navigate("/ResultPage");
+    }
+  }
   useEffect(() => {
     fetch(imageFile)
       .then((res) => res.blob())
@@ -26,7 +37,11 @@ function Education({ imageFile }) {
   }, [actions]);
   console.log(state);
 
-  const { data, setData } = useContext(UserContext);
+  const [AllData, setAllData] = useState();
+
+  // AllData ?  /> : setResultError(true);
+
+  // console.log(AllData);
   const {
     handleSubmit,
     control,
@@ -97,7 +112,11 @@ function Education({ imageFile }) {
 
     axios
       .post(url, state, config)
-      .then((res) => console.log(res.data))
+      .then(
+        (res) => controlFunc(res)
+        // res.request.statusText === "Created" ? setAllData(res.data) : ""
+      )
+
       .catch((err) => console.log(err));
   }
   return (
@@ -184,7 +203,9 @@ function Education({ imageFile }) {
           send Data
         </button>
       </EducationInformation>
-      <EducationLive></EducationLive>
+      <EducationLive>
+        <ResultPage AllData={AllData} />
+      </EducationLive>
     </EducationContainer>
   );
 }

@@ -8,6 +8,7 @@ import { useState, useEffect, useContext } from "react";
 import Education from "./Pages/Education";
 import UserContext from "../src/context/userContext";
 import { StateMachineProvider, createStore } from "little-state-machine";
+import ResultPage from "./Pages/ResultPage";
 // import { StateMachineProvider, createStore } from "little-state-machine";
 
 function App() {
@@ -18,6 +19,12 @@ function App() {
   //   localStorage.setItem("imageEnd", image);
   // };
   const [imageFile, setImageFile] = useState(localStorage.getItem("imageFile"));
+
+  const [resultData, setResultData] = useState();
+
+  const updateResultData = (result) => {
+    setResultData(result);
+  };
 
   function updateImageFile(file) {
     setImageFile(file);
@@ -105,6 +112,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
+            path="/ResultPage"
+            element={<ResultPage resultData={resultData} />}
+          />
+          <Route
             path="/Personal"
             element={
               <PersonalInfo
@@ -132,7 +143,7 @@ function App() {
             path="/Education"
             element={
               <Education
-                // updateAllData={updateAllData}
+                updateResultData={updateResultData}
                 imageFile={imageFile}
                 fullData={localStorage.getItem("datadata")}
               />
