@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/resume-builder-app/static/css/main.8440dd24.css",
-    "main.js": "/resume-builder-app/static/js/main.8ec748db.js",
-    "static/js/787.28cb0dcd.chunk.js": "/resume-builder-app/static/js/787.28cb0dcd.chunk.js",
-    "static/media/background.png": "/resume-builder-app/static/media/background.df20a131b2c111044854.png",
-    "static/media/HelveticaNeue.ttc": "/resume-builder-app/static/media/HelveticaNeue.67d426c3bd180e2ea838.ttc",
-    "static/media/logo2.png": "/resume-builder-app/static/media/logo2.000891862a9bfe5affa5.png",
-    "index.html": "/resume-builder-app/index.html",
-    "main.8440dd24.css.map": "/resume-builder-app/static/css/main.8440dd24.css.map",
-    "main.8ec748db.js.map": "/resume-builder-app/static/js/main.8ec748db.js.map",
-    "787.28cb0dcd.chunk.js.map": "/resume-builder-app/static/js/787.28cb0dcd.chunk.js.map"
+    "main.css": "/react-app/static/css/main.6b7884bf.css",
+    "main.js": "/react-app/static/js/main.a044fcbd.js",
+    "static/js/787.b701888c.chunk.js": "/react-app/static/js/787.b701888c.chunk.js",
+    "static/media/background.png": "/react-app/static/media/background.df20a131b2c111044854.png",
+    "static/media/HelveticaNeue.ttc": "/react-app/static/media/HelveticaNeue.67d426c3bd180e2ea838.ttc",
+    "static/media/logo2.png": "/react-app/static/media/logo2.000891862a9bfe5affa5.png",
+    "index.html": "/react-app/index.html",
+    "main.6b7884bf.css.map": "/react-app/static/css/main.6b7884bf.css.map",
+    "main.a044fcbd.js.map": "/react-app/static/js/main.a044fcbd.js.map",
+    "787.b701888c.chunk.js.map": "/react-app/static/js/787.b701888c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8440dd24.css",
-    "static/js/main.8ec748db.js"
+    "static/css/main.6b7884bf.css",
+    "static/js/main.a044fcbd.js"
   ]
 }
