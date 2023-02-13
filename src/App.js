@@ -26,8 +26,6 @@ function App() {
     setResultData(result);
   };
 
-  const empty = {};
-
   function updateImageFile(file) {
     setImageFile(file);
     localStorage.setItem("imageFile", file);

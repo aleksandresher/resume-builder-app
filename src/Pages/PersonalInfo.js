@@ -16,6 +16,7 @@ function PersonalInfo({ updateImageFile }) {
   const { actions, state } = useStateMachine({
     updateAction,
   });
+  console.log(state);
 
   console.log(state);
   const { data, setData } = useContext(UserContext);

@@ -2,13 +2,40 @@ import styled from "styled-components";
 import email_icon from "../assets/emailIcon.png";
 import mobile_icon from "../assets/MobIcon.png";
 import { useId } from "react";
+import x from "../assets/x.png";
+import { useState } from "react";
+import arrow from "../assets/arrow.png";
+import { useNavigate } from "react-router-dom";
+import clearAction from "../clearState";
 
 function ResultPage({ resultData }) {
+  const [messageState, setMessageState] = useState(true);
+  const navigate = useNavigate();
+
+  function ToHome() {
+    localStorage.clear("storageKey");
+    localStorage.clear("storage");
+    clearAction();
+    navigate("/");
+  }
+
+  function closeMessage() {
+    setMessageState(false);
+  }
   const randomId = useId();
   return (
-    <div>
+    <Parent>
+      <ArrowBtn src={arrow} onClick={ToHome} />
       {resultData ? (
         <CVContainer>
+          {messageState ? (
+            <Message>
+              <Xicon src={x} onClick={closeMessage} />
+              <MessageText>რეზიუმე წარმატებით გაიგზავნა</MessageText>
+            </Message>
+          ) : (
+            ""
+          )}
           <PerInfoContainer>
             <NameSurname>
               <UserImage
@@ -83,10 +110,20 @@ function ResultPage({ resultData }) {
       ) : (
         ""
       )}
-    </div>
+    </Parent>
   );
 }
 export default ResultPage;
+
+const Parent = styled.div`
+  margin-left: 500px;
+  padding-top: 53px;
+`;
+
+const ArrowBtn = styled.img`
+  position: absolute;
+  left: 48px;
+`;
 
 const CVContainer = styled.div`
   width: 822px;
@@ -234,7 +271,32 @@ const UserImage = styled.img`
   height: 246px;
   border-radius: 50%;
   position: absolute;
-  top: 48px;
-  left: 500px;
+  top: 100px;
+  left: 1050px;
   object-fit: fill;
+`;
+
+const Message = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 427px;
+  height: 167px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 28px rgba(0, 0, 0, 0.25);
+  position: absolute;
+  left: 1380px;
+  top: 53px;
+`;
+
+const MessageText = styled.p`
+  width: 364px;
+  font-size: 28px;
+  font-weight: 500;
+  color: #1a1a1a;
+`;
+const Xicon = styled.img`
+  position: absolute;
+  left: 395px;
+  top: 14px;
 `;
