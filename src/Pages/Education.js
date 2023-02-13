@@ -4,6 +4,7 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import email_icon from "../assets/emailIcon.png";
 import mobile_icon from "../assets/MobIcon.png";
+import arrow from "../assets/arrow.png";
 
 import UserContext from "../context/userContext";
 import { useContext } from "react";
@@ -11,7 +12,7 @@ import axios from "axios";
 import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
 import ResultPage from "./ResultPage";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Education({ imageFile, sendData, updateResultData }) {
   const { actions, state } = useStateMachine({
@@ -65,7 +66,10 @@ function Education({ imageFile, sendData, updateResultData }) {
     },
   });
 
-  const { fields, append } = useFieldArray({ control, name: "educations" });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "educations",
+  });
 
   useFormPersist("education", {
     watch,
@@ -99,6 +103,12 @@ function Education({ imageFile, sendData, updateResultData }) {
     }
   }
 
+  function clearStorage() {
+    localStorage.clear("storageKey");
+    localStorage.clear("storage");
+    navigate("/");
+  }
+
   function handleSending(event) {
     event.preventDefault();
     const headers = {
@@ -125,11 +135,12 @@ function Education({ imageFile, sendData, updateResultData }) {
     <EducationContainer>
       <EducationInformation>
         <EducationHeader>
+          <BackToHome src={arrow} onClick={clearStorage} />
           <EdHeading>განათლება</EdHeading>
           {/* <button type="button" onClick={updateData}>
             click to update
           </button> */}
-          <EdP>2/4</EdP>
+          <EdP>3/4</EdP>
         </EducationHeader>
 
         {fields.map((field, index) => {
@@ -194,16 +205,23 @@ function Education({ imageFile, sendData, updateResultData }) {
                   })}
                 ></TextAreaField>
               </EducationDescription>
-              <button type="submit">click to console</button>
+              <RemoveBtn type="button" onClick={() => remove(index)}>
+                ფორმის წაშლა
+              </RemoveBtn>
             </EducationForm>
           );
         })}
         <AppendButton type="button" onClick={() => append()}>
           სხვა სასწავლებლის დამატება
         </AppendButton>
-        <button type="button" onClick={handleSending}>
-          send Data
-        </button>
+        <Buttons>
+          <Link to={"/Experience"}>
+            <PreBtn type="button">უკან</PreBtn>
+          </Link>
+          <NextBtn type="button" onClick={handleSending}>
+            დასრულება
+          </NextBtn>
+        </Buttons>
       </EducationInformation>
       <LiveInfo>
         <PerInfoContainer>
@@ -250,7 +268,14 @@ function Education({ imageFile, sendData, updateResultData }) {
           <EdTitle>განათლება</EdTitle>
           {watch("educations").map(
             ({ institute, degree_id, due_date, description }, idx) => (
-              <div></div>
+              <div key={idx}>
+                <Institute key={idx}>
+                  {institute}
+                  {degree_id}
+                </Institute>
+                <EdDate key={idx}>{due_date}</EdDate>
+                <EdDescription key={idx}>{description}</EdDescription>
+              </div>
             )
           )}
         </EducationLiveContainer>
@@ -262,6 +287,11 @@ export default Education;
 
 const EducationLiveContainer = styled.div``;
 
+const BackToHome = styled.img`
+  position: absolute;
+  left: 48px;
+`;
+
 const EdTitle = styled.p`
   font-family: HelveticaNeue;
   color: #f93b1d;
@@ -269,7 +299,30 @@ const EdTitle = styled.p`
   font-weight: 700;
   margin-top: 24px;
 `;
+const EdDescription = styled.p`
+  font-size: 16px;
+  color: #000;
+  font-family: HelveticaNeue;
+  margin-top: 16px;
+  inline-size: 662x;
+  overflow-wrap: break-word;
+`;
 
+const EdDate = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  color: #909090;
+  font-family: HelveticaNeue;
+  margin-bottom: 16px;
+`;
+const Institute = styled.p`
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+  font-family: HelveticaNeue;
+  margin-bottom: 7px;
+  margin-top: 15px;
+`;
 const ExpDesc = styled.p`
   font-size: 16px;
   color: #000;
@@ -524,4 +577,46 @@ const Box = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
+`;
+const RemoveBtn = styled.button`
+  width: 140px;
+  height: 30px;
+  color: #fff;
+  font-size: 16px;
+  font-family: HelveticaNeue;
+  border: none;
+  margin-top: 10px;
+  background-color: #ef5050;
+  border-radius: 4px;
+`;
+
+const Buttons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 115px;
+  width: 798;
+  height: 48px;
+  margin-bottom: 65px;
+`;
+
+const PreBtn = styled.button`
+  color: #fff;
+  font-size: 16px;
+  font-family: HelveticaNeue;
+  width: 113px;
+  height: 48px;
+  border: none;
+  background-color: #6b40e3;
+  border-radius: 4px;
+`;
+
+const NextBtn = styled.button`
+  width: 151px;
+  height: 48px;
+  color: #fff;
+  font-size: 16px;
+  font-family: HelveticaNeue;
+  border: none;
+  background-color: #6b40e3;
+  border-radius: 4px;
 `;

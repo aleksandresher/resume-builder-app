@@ -4,6 +4,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import email_icon from "../assets/emailIcon.png";
 import mobile_icon from "../assets/MobIcon.png";
+import arrow from "../assets/arrow.png";
 
 import { useContext, useEffect } from "react";
 import UserContext from "../context/userContext";
@@ -59,10 +60,17 @@ function Experience(updateUserData, file) {
 
   const test = localStorage.getItem("storage");
 
+  function clearStorage() {
+    localStorage.clear("storageKey");
+    localStorage.clear("storage");
+    navigate("/");
+  }
+
   return (
     <ExperienceContainer>
       <ExperienceInputs>
         <ExperienceHeader>
+          <BackToHome src={arrow} onClick={clearStorage} />
           <ExpHeading>გამოცდილება</ExpHeading>
           <ExpP>2/4</ExpP>
         </ExperienceHeader>
@@ -144,7 +152,7 @@ function Experience(updateUserData, file) {
 
         <Buttons>
           <Link to={"/Personal"}>
-            <PreBtn type="button">წინა</PreBtn>
+            <PreBtn type="button">უკან</PreBtn>
           </Link>
 
           {/* <Link to={"/Education"}> */}
@@ -204,6 +212,11 @@ function Experience(updateUserData, file) {
   );
 }
 export default Experience;
+
+const BackToHome = styled.img`
+  position: absolute;
+  left: 48px;
+`;
 
 const ExperienceContainer = styled.div`
   display: grid;

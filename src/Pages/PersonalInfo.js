@@ -109,6 +109,12 @@ function PersonalInfo({ updateImageFile }) {
         <NameLastNameBox>
           <InputBox>
             <InputLabel htmlFor="name">სახელი</InputLabel>
+            {errors.name ? <NameError src={warLogo} /> : ""}
+            {getFieldState("name").invalid || !getFieldState("name").isDirty ? (
+              ""
+            ) : (
+              <NameSuccess src={sucLogo} />
+            )}
             <InputField
               type="text"
               placeholder="ანზორ"
@@ -118,10 +124,18 @@ function PersonalInfo({ updateImageFile }) {
                 minLength: { value: 2 },
               })}
             ></InputField>
+
             <InputParagraph>მინუმუმ 2 ასო, ქართული ასოები</InputParagraph>
           </InputBox>
           <InputBox>
             <InputLabel htmlFor="surname">გვარი</InputLabel>
+            {errors.surname ? <SurnameError src={warLogo} /> : ""}
+            {getFieldState("surname").invalid ||
+            !getFieldState("surname").isDirty ? (
+              ""
+            ) : (
+              <SurnameSuccess src={sucLogo} />
+            )}
             <InputField
               type="text"
               placeholder="მუმლაძე"
@@ -137,18 +151,21 @@ function PersonalInfo({ updateImageFile }) {
 
         <ImageContainer>
           <ImageLabel>პირადი ფოტოს ატვირთვა</ImageLabel>
-          <label htmlFor="imageUpload">
-            ატვირთვა
-            <ImageInput
-              id="imageUpload"
-              className="fileUpload"
-              type="file"
-              name="imageupload"
-              // accept="image/"
-              {...register("image")}
-              onChange={changeHandler}
-            ></ImageInput>
-          </label>
+          <ImgUploadBtn>
+            <label htmlFor="imageUpload"> ატვირთვა</label>
+          </ImgUploadBtn>
+
+          <ImageInput
+            id="imageUpload"
+            className="fileUpload"
+            type="file"
+            name="imageupload"
+            // accept="image/"
+            {...register("image", {
+              required: true,
+            })}
+            onChange={changeHandler}
+          ></ImageInput>
         </ImageContainer>
 
         {/* <p>{errors.lastName ? <img src={warLogo} /> : ""}</p>
@@ -193,16 +210,17 @@ function PersonalInfo({ updateImageFile }) {
             type="text"
             placeholder="+995 551 12 34 56"
             {...register("phone_number", {
+              required: true,
               // pattern: /^\+(995)\s\d{3}\s\d{2}\s\d{2}\s\d{2}/,
               valueAsNumber: false,
             })}
           />
-          {errors.mobile ? <NumberError src={warLogo} /> : ""}
+          {errors.phone_number ? <MobileError src={warLogo} /> : ""}
           {getFieldState("phone_number").invalid ||
           !getFieldState("phone_number").isDirty ? (
             ""
           ) : (
-            <NumberSuccess src={sucLogo} />
+            <MobileSuccess src={sucLogo} />
           )}
 
           <InputParagraph>
@@ -297,6 +315,54 @@ const Name = styled.p`
   color: #f93b1d;
 `;
 
+const NameSuccess = styled.img`
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 200px;
+  left: 475px;
+`;
+
+const NameError = styled.img`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 200px;
+  left: 505px;
+`;
+
+const SurnameSuccess = styled.img`
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 200px;
+  left: 900px;
+`;
+
+const SurnameError = styled.img`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 200px;
+  left: 930px;
+`;
+
+const MobileSuccess = styled.img`
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 720px;
+  left: 900px;
+`;
+
+const MobileError = styled.img`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 720px;
+  left: 930px;
+`;
+
 const Box = styled.div`
   display: flex;
   gap: 10px;
@@ -354,7 +420,7 @@ const EmailError = styled.img`
   height: 24px;
   position: absolute;
   top: 37px;
-  left: 815px;
+  left: 805px;
 `;
 
 const NumberError = styled.img`
@@ -402,8 +468,7 @@ const EmailInput = styled.input`
   font-family: HelveticaNeue;
   color: #000000;
       padding-left: 16px;
-  border: 2px solid
-    ${(props) => (props.first || props.second ? "#EF5050" : "green")};
+      border: 2px solid #ebebeb;
 
   border-radius: 4px;
 
@@ -499,7 +564,10 @@ const ImageLabel = styled.p`
   font-family: HelveticaNeue;
 `;
 
-const ImgUploadBtn = styled.button`
+const ImgUploadBtn = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 107px;
   height: 27px;
   border-radius: 4px;
