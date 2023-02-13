@@ -71,7 +71,7 @@ function Education({ imageFile, sendData, updateResultData }) {
     name: "educations",
   });
 
-  useFormPersist("education", {
+  useFormPersist("educations", {
     watch,
     setValue,
     storage: window.localStorage,
