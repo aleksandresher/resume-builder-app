@@ -208,11 +208,14 @@ function Education({ imageFile, sendData, updateResultData }) {
         <AppendButton type="button" onClick={() => append()}>
           სხვა სასწავლებლის დამატება
         </AppendButton>
+        <button type="button" onClick={handleSending}>
+          send Data
+        </button>
         <Buttons>
           <Link to={"/Experience"}>
             <PreBtn type="button">უკან</PreBtn>
           </Link>
-          <NextBtn type="submit" onClick={handleSending}>
+          <NextBtn type="button" onClick={handleSending}>
             დასრულება
           </NextBtn>
         </Buttons>
