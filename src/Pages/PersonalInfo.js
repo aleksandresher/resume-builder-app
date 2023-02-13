@@ -58,6 +58,7 @@ function PersonalInfo({ updateImageFile }) {
   function clearStorage() {
     localStorage.clear("storageKey");
     localStorage.clear("storage");
+    localStorage.clear("educations");
     navigate("/");
   }
 

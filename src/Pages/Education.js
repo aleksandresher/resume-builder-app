@@ -103,12 +103,6 @@ function Education({ imageFile, sendData, updateResultData }) {
     }
   }
 
-  function clearStorage() {
-    localStorage.clear("storageKey");
-    localStorage.clear("storage");
-    navigate("/");
-  }
-
   function handleSending(event) {
     event.preventDefault();
     const headers = {
@@ -135,7 +129,7 @@ function Education({ imageFile, sendData, updateResultData }) {
     <EducationContainer>
       <EducationInformation>
         <EducationHeader>
-          <BackToHome src={arrow} onClick={clearStorage} />
+          <BackToHome src={arrow} />
           <EdHeading>განათლება</EdHeading>
           {/* <button type="button" onClick={updateData}>
             click to update
@@ -218,7 +212,7 @@ function Education({ imageFile, sendData, updateResultData }) {
           <Link to={"/Experience"}>
             <PreBtn type="button">უკან</PreBtn>
           </Link>
-          <NextBtn type="button" onClick={handleSending}>
+          <NextBtn type="submit" onClick={handleSending}>
             დასრულება
           </NextBtn>
         </Buttons>

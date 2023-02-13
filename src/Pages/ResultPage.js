@@ -15,6 +15,7 @@ function ResultPage({ resultData }) {
   function ToHome() {
     localStorage.clear("storageKey");
     localStorage.clear("storage");
+    localStorage.clear("educations")
     clearAction();
     navigate("/");
   }
@@ -61,21 +62,24 @@ function ResultPage({ resultData }) {
           <Experience>
             <ExpHeader>გამოცდილება</ExpHeader>
             {resultData.experiences.map(
-              ({
-                index,
-                position,
-                employer,
-                start_date,
-                due_date,
-                description,
-              }) => (
-                <div key={Math.random()}>
-                  <PositionAndEmployer key={Math.random()}>
-                    <Position key={Math.random()}>{position},</Position>
-                    <Employer key={Math.random()}>{employer}</Employer>
+              (
+                {
+                  index,
+                  position,
+                  employer,
+                  start_date,
+                  due_date,
+                  description,
+                },
+                idx
+              ) => (
+                <div key={idx}>
+                  <PositionAndEmployer key={idx}>
+                    <Position key={idx}>{position},</Position>
+                    <Employer key={idx}>{employer}</Employer>
                   </PositionAndEmployer>
 
-                  <Date key={Math.random()}>
+                  <Date key={idx}>
                     {start_date} - {due_date}
                   </Date>
 
@@ -90,18 +94,16 @@ function ResultPage({ resultData }) {
           <Experience>
             <ExpHeader>განათლება</ExpHeader>
             {resultData.educations.map(
-              ({ index, institute, degree_id, due_date, description }) => (
-                <div key={Math.random()}>
-                  <PositionAndEmployer key={Math.random()}>
-                    <Position key={Math.random()}>{institute},</Position>
-                    <Employer key={Math.random()}>{degree_id}</Employer>
+              ({ index, institute, degree_id, due_date, description }, idx) => (
+                <div key={idx}>
+                  <PositionAndEmployer key={idx}>
+                    <Position key={idx}>{institute},</Position>
+                    <Employer key={idx}>{degree_id}</Employer>
                   </PositionAndEmployer>
 
-                  <Date key={Math.random()}>{due_date}</Date>
+                  <Date key={idx}>{due_date}</Date>
 
-                  <ExpDescription key={Math.random()}>
-                    {description}
-                  </ExpDescription>
+                  <ExpDescription key={idx}>{description}</ExpDescription>
                 </div>
               )
             )}
