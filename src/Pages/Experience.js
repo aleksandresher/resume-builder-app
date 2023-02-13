@@ -180,39 +180,24 @@ function Experience(updateUserData, file) {
 
           <UserImage src={localStorage.getItem("imageBase64")} />
         </PersonalInfo>
-
-        <Experience>
-          {/* <ExpHeader>გამოცდილება</ExpHeader>
+        <ExperienceLive>
+          <ExpHeader>გამოცდილება</ExpHeader>
           {watch("experiences").map(
             (
-              { position, employer, start_date, due_date, description },
+              { index, position, employer, start_date, due_date, description },
               idx
             ) => (
-              <div key={idx}>
-                <PositionAndEmployer key={idx}>
-                  <Position key={idx}>{position},</Position>
-                  <Employer key={idx}>{employer}</Employer>
-                </PositionAndEmployer>
-                <Date key={idx}>
-                  {start_date}
-                  {due_date}
-                </Date>
-
-                <ExpDescription key={idx}>{description}</ExpDescription>
-              </div>
+              <Exp key={idx}>
+                <PosAndEmp key={idx}>
+                  {position}, {employer}
+                </PosAndEmp>
+                <DateBox key={idx}>
+                  {start_date} - {due_date}
+                </DateBox>
+                <p>{description}</p>
+              </Exp>
             )
-          )} */}
-        </Experience>
-        <ExperienceLive>
-          {/* <ExpHeader>გამოცდილება</ExpHeader>
-          {watch("experiences").map(({ index, position, employer }, idx) => (
-            <Exp key={idx}>
-              <p key={idx}>
-                {position},{employer}
-              </p>
-            </Exp>
-          ))} */}
-          {/* <Company>{watch(`experiences[0].position`)}</Company> */}
+          )}
         </ExperienceLive>
       </LiveInfo>
     </ExperienceContainer>
@@ -236,6 +221,7 @@ const LiveInfo = styled.div`
   width: 822px;
   padding-top: 68px;
   padding-left: 80px;
+  padding-bottom: 80px;
 `;
 
 const ExperienceHeader = styled.div`
@@ -452,7 +438,7 @@ const PersonalInfo = styled.div`
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid #c8c8c8;
-  padding-bottom: 80px;
+  height: 360px;
 `;
 
 const Icon = styled.img``;
@@ -496,6 +482,7 @@ const ExperienceLive = styled.div``;
 
 const Exp = styled.div`
   margin-bottom: 15px;
+  padding-bottom: 30px;
 `;
 
 const ExpHeader = styled.p`
@@ -503,42 +490,22 @@ const ExpHeader = styled.p`
   color: #f93b1d;
   font-size: 18px;
   font-weight: 700;
+  margin-top: 24px;
 `;
 
-const PositionAndEmployer = styled.div`
-  display: flex;
-  gap: 7px;
+const PosAndEmp = styled.p`
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+  font-family: HelveticaNeue;
   margin-bottom: 7px;
+  margin-top: 15px;
 `;
 
-const Position = styled.p`
+const DateBox = styled.p`
   font-size: 16px;
-  color: #1a1a1a;
-  font-weight: 500;
-  font-family: HelveticaNeue;
-`;
-
-const Employer = styled.p`
-  font-size: 16px;
-  color: #1a1a1a;
-  font-weight: 500;
-  font-family: HelveticaNeue;
-`;
-
-const Date = styled.p`
-  font-size: 16px;
-  color: #909090;
-  style: italic;
   font-weight: 400;
+  color: #909090;
   font-family: HelveticaNeue;
-  margin-top: 7px;
-`;
-
-const ExpDescription = styled.p`
-  font-size: 16px;
-  color: #000;
-  font-family: HelveticaNeue;
-  margin-top: 16px;
-  inline-size: 662x;
-  overflow-wrap: break-word;
+  margin-bottom: 16px;
 `;

@@ -206,33 +206,117 @@ function Education({ imageFile, sendData, updateResultData }) {
         </button>
       </EducationInformation>
       <LiveInfo>
-        <NameSurname>
-          <Name>{state.name}</Name>
-          <Name>{state.surname}</Name>
-        </NameSurname>
-        <Box>
-          <Icon src={email_icon} />
-          <Generic>{state.email}</Generic>
-        </Box>
+        <PerInfoContainer>
+          <NameSurname>
+            <Name>{state.name}</Name>
+            <Name>{state.surname}</Name>
+          </NameSurname>
+          <Box>
+            <Icon src={email_icon} />
+            <Generic>{state.email}</Generic>
+          </Box>
 
-        <Box>
-          <Icon src={mobile_icon} />
-          <Generic>{state.phone_number}</Generic>
-        </Box>
+          <Box>
+            <Icon src={mobile_icon} />
+            <Generic>{state.phone_number}</Generic>
+          </Box>
 
-        {state.about_me ? <P>ჩემ შესახებ</P> : ""}
-        <About>{state.about_me}</About>
+          {state.about_me ? <P>ჩემ შესახებ</P> : ""}
+          <About>{state.about_me}</About>
 
-        <UserImage src={localStorage.getItem("imageBase64")} />
+          <UserImage src={localStorage.getItem("imageBase64")} />
+        </PerInfoContainer>
+
+        <ExperienceContainer>
+          <ExpTitle>გამოცდილება</ExpTitle>
+          {state.experiences.map(
+            (
+              { position, employer, start_date, due_date, description },
+              idx
+            ) => (
+              <div key={idx}>
+                <ExpEmp>
+                  {position} , {employer}
+                </ExpEmp>
+                <ExpDate>
+                  {start_date} -{due_date}
+                </ExpDate>
+                <ExpDesc>{description}</ExpDesc>
+              </div>
+            )
+          )}
+        </ExperienceContainer>
+        <EducationLiveContainer>
+          <EdTitle>განათლება</EdTitle>
+          {watch("educations").map(
+            ({ institute, degree_id, due_date, description }, idx) => (
+              <div></div>
+            )
+          )}
+        </EducationLiveContainer>
       </LiveInfo>
     </EducationContainer>
   );
 }
 export default Education;
 
+const EducationLiveContainer = styled.div``;
+
+const EdTitle = styled.p`
+  font-family: HelveticaNeue;
+  color: #f93b1d;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 24px;
+`;
+
+const ExpDesc = styled.p`
+  font-size: 16px;
+  color: #000;
+  font-family: HelveticaNeue;
+  margin-top: 16px;
+  inline-size: 662x;
+  overflow-wrap: break-word;
+`;
+
+const ExpTitle = styled.p`
+  font-family: HelveticaNeue;
+  color: #f93b1d;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 24px;
+`;
+
+const ExpDate = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  color: #909090;
+  font-family: HelveticaNeue;
+  margin-bottom: 16px;
+`;
+
+const ExpEmp = styled.p`
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+  font-family: HelveticaNeue;
+  margin-bottom: 7px;
+  margin-top: 15px;
+`;
+
 const EducationContainer = styled.div`
   display: grid;
   grid-template-columns: 1028px 900px;
+`;
+
+const ExperienceContainer = styled.div`
+  padding-bottom: 20px;
+  border-bottom: 1px solid #c8c8c8;
+`;
+
+const PerInfoContainer = styled.div`
+  height: 300px;
+  border-bottom: 1px solid #c8c8c8;
 `;
 const EducationInformation = styled.div`
   padding-left: 126px;
@@ -242,6 +326,8 @@ const EducationInformation = styled.div`
 const EducationLive = styled.div``;
 
 const LiveInfo = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-right: 0px;
   width: 822px;
   padding-top: 68px;
