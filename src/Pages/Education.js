@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
+import email_icon from "../assets/emailIcon.png";
+import mobile_icon from "../assets/MobIcon.png";
 
 import UserContext from "../context/userContext";
 import { useContext } from "react";
@@ -203,9 +205,26 @@ function Education({ imageFile, sendData, updateResultData }) {
           send Data
         </button>
       </EducationInformation>
-      <EducationLive>
-        <ResultPage AllData={AllData} />
-      </EducationLive>
+      <LiveInfo>
+        <NameSurname>
+          <Name>{state.name}</Name>
+          <Name>{state.surname}</Name>
+        </NameSurname>
+        <Box>
+          <Icon src={email_icon} />
+          <Generic>{state.email}</Generic>
+        </Box>
+
+        <Box>
+          <Icon src={mobile_icon} />
+          <Generic>{state.phone_number}</Generic>
+        </Box>
+
+        {state.about_me ? <P>ჩემ შესახებ</P> : ""}
+        <About>{state.about_me}</About>
+
+        <UserImage src={localStorage.getItem("imageBase64")} />
+      </LiveInfo>
     </EducationContainer>
   );
 }
@@ -213,7 +232,7 @@ export default Education;
 
 const EducationContainer = styled.div`
   display: grid;
-  grid-template-columns: 4fr 1fr;
+  grid-template-columns: 1028px 900px;
 `;
 const EducationInformation = styled.div`
   padding-left: 126px;
@@ -221,6 +240,13 @@ const EducationInformation = styled.div`
   background-color: #f9f9f9;
 `;
 const EducationLive = styled.div``;
+
+const LiveInfo = styled.div`
+  margin-right: 0px;
+  width: 822px;
+  padding-top: 68px;
+  padding-left: 80px;
+`;
 
 const EducationHeader = styled.div`
   display: flex;
@@ -358,4 +384,58 @@ const AppendButton = styled.button`
   color: #fff;
   font-family: HelveticaNeue;
   font-weight: 500;
+`;
+
+const P = styled.p`
+  font-size: 18px;
+  font-weight: 700;
+  color: #f93b1d;
+  font-family: HelveticaNeue;
+  margin-top: 34px;
+  margin-bottom: 15px;
+`;
+
+const About = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  font-family: HelveticaNeue;
+  color: #000;
+  inline-size: 440px;
+  overflow-wrap: break-word;
+`;
+
+const Icon = styled.img``;
+
+const Generic = styled.p`
+  font-size: 18px;
+  font-weight: 400px;
+  color: #1a1a1a;
+  font-family: HelveticaNeue;
+`;
+const UserImage = styled.img`
+  outline: none;
+  width: 246px;
+  height: 246px;
+  border-radius: 50%;
+  position: absolute;
+  left: 1530px;
+  top: 80px;
+`;
+
+const NameSurname = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-bottom: 17px;
+`;
+const Name = styled.p`
+  font-size: 34px;
+  font-weight: 700;
+  font-family: HelveticaNeue;
+  color: #f93b1d;
+`;
+
+const Box = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
 `;

@@ -11,6 +11,7 @@ import updateAction from "../updateAction";
 import { useStateMachine } from "little-state-machine";
 import email_icon from "../assets/emailIcon.png";
 import mobile_icon from "../assets/MobIcon.png";
+import arrow from "../assets/arrow.png";
 
 function PersonalInfo({ updateImageFile }) {
   const { actions, state } = useStateMachine({
@@ -23,6 +24,8 @@ function PersonalInfo({ updateImageFile }) {
   const imageMimeType = /image\/(png|jpg|jpeg)/i;
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState();
+  const navigate = useNavigate();
+  console.log(imageUrl);
 
   const {
     register,
@@ -55,9 +58,8 @@ function PersonalInfo({ updateImageFile }) {
   function clearStorage() {
     localStorage.clear("storageKey");
     localStorage.clear("storage");
+    navigate("/");
   }
-
-  const navigate = useNavigate();
 
   const changeHandler = (event) => {
     const files = event.target.files;
@@ -69,19 +71,34 @@ function PersonalInfo({ updateImageFile }) {
       reader.onloadend = () => {
         updateImageFile(reader.result);
         setImageUrl(reader.result);
+        localStorage.setItem("imageBase64", reader.result);
         const result = reader.result?.toString();
       };
       reader.readAsDataURL(file);
     }
   };
 
+  useEffect(() => {
+    fetch(localStorage.getItem("imageBase64"))
+      .then((res) => res.blob())
+      .then((blob) => {
+        const file = new File([blob], "File name", { type: "image/png" });
+        setImageUrl(file);
+      });
+  }, []);
+
+  // fetch(localStorage.getItem("imageBase64"))
+  //   .then((res) => res.blob())
+  //   .then((blob) => {
+  //     const file = new File([blob], "File name", { type: "image/png" });
+  //     setImageUrl(file);
+  //   });
+
   return (
     <PersonalInfoContainer>
       <InfoContainer onSubmit={handleSubmit(onSubmit)}>
         <PersonalHeading>
-          <button type="button" onClick={clearStorage}>
-            clear
-          </button>
+          <BackToHome src={arrow} onClick={clearStorage} />
           <MainHeader>პირადი ინფო</MainHeader>
           <PerP>1/4</PerP>
           {/* <button onClick={() => updateUserData(data)} type="button">
@@ -174,10 +191,9 @@ function PersonalInfo({ updateImageFile }) {
           <InputLabel>მობილური ნომერი</InputLabel>
           <NumberInput
             type="text"
-            first={getFieldState("phone_number").invalid}
-            second={!getFieldState("phone_number").isDirty}
             placeholder="+995 551 12 34 56"
             {...register("phone_number", {
+              // pattern: /^\+(995)\s\d{3}\s\d{2}\s\d{2}\s\d{2}/,
               valueAsNumber: false,
             })}
           />
@@ -188,6 +204,7 @@ function PersonalInfo({ updateImageFile }) {
           ) : (
             <NumberSuccess src={sucLogo} />
           )}
+
           <InputParagraph>
             უნდა აკმაყოფილებდეს ქართული ნომრის ფორმატს
           </InputParagraph>
@@ -207,30 +224,38 @@ function PersonalInfo({ updateImageFile }) {
           <Name>{watch("surname")}</Name>
         </NameSurname>
         <Box>
-          <Icon src={email_icon} />
+          {watch("email") ? <Icon src={email_icon} /> : ""}
           <Generic>{watch("email")}</Generic>
         </Box>
 
         <Box>
-          <Icon src={mobile_icon} />
+          {watch("phone_number") ? <Icon src={mobile_icon} /> : ""}
           <Generic>{watch("phone_number")}</Generic>
         </Box>
 
-        <P>ჩემ შესახებ</P>
+        {watch("about_me") ? <P>ჩემ შესახებ</P> : ""}
         <About>{watch("about_me")}</About>
 
-        <UserImage src={imageUrl} />
+        <UserImage src={localStorage.getItem("imageBase64")} />
       </LiveInfo>
     </PersonalInfoContainer>
   );
 }
+
 export default PersonalInfo;
+
+const BackToHome = styled.img`
+  position: absolute;
+  left: 48px;
+`;
 
 const P = styled.p`
   font-size: 18px;
   font-weight: 700;
   color: #f93b1d;
   font-family: HelveticaNeue;
+  margin-top: 34px;
+  margin-bottom: 15px;
 `;
 
 const About = styled.p`
@@ -255,11 +280,15 @@ const UserImage = styled.img`
   width: 246px;
   height: 246px;
   border-radius: 50%;
+  position: absolute;
+  left: 1530px;
+  top: 80px;
 `;
 
 const NameSurname = styled.div`
   display: flex;
   gap: 20px;
+  margin-bottom: 17px;
 `;
 const Name = styled.p`
   font-size: 34px;
@@ -271,6 +300,7 @@ const Name = styled.p`
 const Box = styled.div`
   display: flex;
   gap: 10px;
+  margin-bottom: 10px;
 `;
 
 const TestDiv = styled.div`
@@ -413,6 +443,8 @@ const InputField = styled.input`
 const LiveInfo = styled.div`
   margin-right: 0px;
   width: 822px;
+  padding-top: 68px;
+  padding-left: 80px;
 `;
 
 const TextAreaField = styled.textarea`

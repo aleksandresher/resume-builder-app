@@ -2,13 +2,15 @@ import useFormPersist from "react-hook-form-persist";
 import styled from "styled-components";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import email_icon from "../assets/emailIcon.png";
+import mobile_icon from "../assets/MobIcon.png";
 
 import { useContext, useEffect } from "react";
 import UserContext from "../context/userContext";
 import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
 
-function Experience(updateAllData) {
+function Experience(updateUserData, file) {
   const { actions, state } = useStateMachine({
     updateAction,
   });
@@ -35,7 +37,10 @@ function Experience(updateAllData) {
     },
   });
 
-  const { fields, append } = useFieldArray({ control, name: "experiences" });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "experiences",
+  });
 
   useFormPersist("storage", {
     watch,
@@ -126,6 +131,9 @@ function Experience(updateAllData) {
                 ></TextAreaField>
               </JobDescription>
               {/* <button type="submit">click to console</button> */}
+              <RemoveBtn type="button" onClick={() => remove(index)}>
+                ფორმის წაშლა
+              </RemoveBtn>
             </ExperienceForm>
           );
         })}
@@ -143,21 +151,70 @@ function Experience(updateAllData) {
           <NextBtn
             type="submit"
             form="myform"
-            // onClick={() => props.updateUserData(experienceData)}
+            // onClick={() => updateUserData(experienceData)}
           >
             შემდეგი
           </NextBtn>
           {/* </Link> */}
         </Buttons>
       </ExperienceInputs>
-      {/* 
       <LiveInfo>
-        {userData?.map(({ positin, employer, index }) => (
-          <p key={employer}>{employer}</p>
-        ))}
+        <PersonalInfo>
+          <NameSurname>
+            <Name>{state.name}</Name>
+            <Name>{state.surname}</Name>
+          </NameSurname>
+          <Box>
+            <Icon src={email_icon} />
+            <Generic>{state.email}</Generic>
+            {/* <p>{state.educations.description}</p> */}
+          </Box>
 
-        <img src={props.file} />
-      </LiveInfo> */}
+          <Box>
+            <Icon src={mobile_icon} />
+            <Generic>{state.phone_number}</Generic>
+          </Box>
+
+          {state.about_me ? <P>ჩემ შესახებ</P> : ""}
+          <About>{state.about_me}</About>
+
+          <UserImage src={localStorage.getItem("imageBase64")} />
+        </PersonalInfo>
+
+        <Experience>
+          {/* <ExpHeader>გამოცდილება</ExpHeader>
+          {watch("experiences").map(
+            (
+              { position, employer, start_date, due_date, description },
+              idx
+            ) => (
+              <div key={idx}>
+                <PositionAndEmployer key={idx}>
+                  <Position key={idx}>{position},</Position>
+                  <Employer key={idx}>{employer}</Employer>
+                </PositionAndEmployer>
+                <Date key={idx}>
+                  {start_date}
+                  {due_date}
+                </Date>
+
+                <ExpDescription key={idx}>{description}</ExpDescription>
+              </div>
+            )
+          )} */}
+        </Experience>
+        <ExperienceLive>
+          {/* <ExpHeader>გამოცდილება</ExpHeader>
+          {watch("experiences").map(({ index, position, employer }, idx) => (
+            <Exp key={idx}>
+              <p key={idx}>
+                {position},{employer}
+              </p>
+            </Exp>
+          ))} */}
+          {/* <Company>{watch(`experiences[0].position`)}</Company> */}
+        </ExperienceLive>
+      </LiveInfo>
     </ExperienceContainer>
   );
 }
@@ -165,7 +222,7 @@ export default Experience;
 
 const ExperienceContainer = styled.div`
   display: grid;
-  grid-template-columns: 4fr 1fr;
+  grid-template-columns: 1028px 900px;
 `;
 
 const ExperienceInputs = styled.div`
@@ -174,7 +231,12 @@ const ExperienceInputs = styled.div`
   background-color: #f9f9f9;
 `;
 
-const LiveInfo = styled.div``;
+const LiveInfo = styled.div`
+  margin-right: 0px;
+  width: 822px;
+  padding-top: 68px;
+  padding-left: 80px;
+`;
 
 const ExperienceHeader = styled.div`
   display: flex;
@@ -186,6 +248,19 @@ const ExperienceHeader = styled.div`
   margin-top: 47px;
   justify-content: space-between;
 `;
+
+const RemoveBtn = styled.button`
+  width: 140px;
+  height: 30px;
+  color: #fff;
+  font-size: 16px;
+  font-family: HelveticaNeue;
+  border: none;
+  margin-top: 10px;
+  background-color: #ef5050;
+  border-radius: 4px;
+`;
+
 const ExpHeading = styled.h1`
   font-size: 24px;
   font-weight: 700;
@@ -353,4 +428,117 @@ const NextBtn = styled.button`
   border: none;
   background-color: #6b40e3;
   border-radius: 4px;
+`;
+
+const P = styled.p`
+  font-size: 18px;
+  font-weight: 700;
+  color: #f93b1d;
+  font-family: HelveticaNeue;
+  margin-top: 34px;
+  margin-bottom: 15px;
+`;
+
+const About = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  font-family: HelveticaNeue;
+  color: #000;
+  inline-size: 440px;
+  overflow-wrap: break-word;
+`;
+
+const PersonalInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #c8c8c8;
+  padding-bottom: 80px;
+`;
+
+const Icon = styled.img``;
+
+const Generic = styled.p`
+  font-size: 18px;
+  font-weight: 400px;
+  color: #1a1a1a;
+  font-family: HelveticaNeue;
+`;
+const UserImage = styled.img`
+  outline: none;
+  width: 246px;
+  height: 246px;
+  border-radius: 50%;
+  position: absolute;
+  left: 1530px;
+  top: 80px;
+`;
+
+const NameSurname = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-bottom: 17px;
+`;
+const Name = styled.p`
+  font-size: 34px;
+  font-weight: 700;
+  font-family: HelveticaNeue;
+  color: #f93b1d;
+`;
+
+const Box = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+`;
+const Company = styled.p``;
+
+const ExperienceLive = styled.div``;
+
+const Exp = styled.div`
+  margin-bottom: 15px;
+`;
+
+const ExpHeader = styled.p`
+  font-family: HelveticaNeue;
+  color: #f93b1d;
+  font-size: 18px;
+  font-weight: 700;
+`;
+
+const PositionAndEmployer = styled.div`
+  display: flex;
+  gap: 7px;
+  margin-bottom: 7px;
+`;
+
+const Position = styled.p`
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 500;
+  font-family: HelveticaNeue;
+`;
+
+const Employer = styled.p`
+  font-size: 16px;
+  color: #1a1a1a;
+  font-weight: 500;
+  font-family: HelveticaNeue;
+`;
+
+const Date = styled.p`
+  font-size: 16px;
+  color: #909090;
+  style: italic;
+  font-weight: 400;
+  font-family: HelveticaNeue;
+  margin-top: 7px;
+`;
+
+const ExpDescription = styled.p`
+  font-size: 16px;
+  color: #000;
+  font-family: HelveticaNeue;
+  margin-top: 16px;
+  inline-size: 662x;
+  overflow-wrap: break-word;
 `;
