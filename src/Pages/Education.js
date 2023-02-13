@@ -105,7 +105,7 @@ function Education({ imageFile, sendData, updateResultData }) {
 
   function handleSending(event) {
     event.preventDefault();
-    useNavigate("/ResultPage");
+    navigate("/ResultPage");
     const headers = {
       "Content-Type": "multipart/form-data",
     };
